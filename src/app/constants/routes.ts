@@ -1,0 +1,17 @@
+export const AppRoutes = {
+  home: '/',
+  about: '/about',
+  mission: '/mission-vision',
+  programs: '/programs',
+  projects: '/projects',
+  gallery: '/gallery',
+  videos: '/videos',
+  events: '/events',
+  stories: '/stories',
+  contact: '/contact',
+  privacy: '/privacy-policy',
+  terms: '/terms-conditions',
+  login: '/admin/login',
+  admin: '/admin',
+  notFound: '*',
+}
