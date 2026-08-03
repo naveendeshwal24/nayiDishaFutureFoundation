@@ -126,48 +126,56 @@ const featureCardsData = [
 
 export function HomePage() {
   return (
-    <div className="space-y-20 pb-8">
-      {/* Hero Banner */}
-      <HeroBanner items={heroBannerItems} autoScrollInterval={5000} />
+    <div className="space-y-12 md:space-y-16 lg:space-y-20 px-4 sm:px-6 lg:px-8 pb-8">
+      <div className="mx-auto max-w-7xl w-full">
+        {/* Hero Banner */}
+        <HeroBanner items={heroBannerItems} autoScrollInterval={5000} />
 
-      <div className="grid gap-8 lg:grid-cols-[0.9fr_0.7fr]">
-        <section className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-purple-100">
-          <SectionHeading title="Mission" description="Our mission is to enable communities to thrive with education, health, and sustainable livelihoods." />
-          <p className="mt-4 text-slate-600">
-            Nayi Disha supports local leaders, builds trusted programs, and shares impact stories while preserving dignity and sustainability.
-          </p>
+        <div className="grid gap-6 md:gap-8 grid-cols-1 lg:grid-cols-[0.9fr_0.7fr] mt-12 md:mt-16 lg:mt-20">
+          <section className="rounded-3xl bg-white p-6 sm:p-8 shadow-sm ring-1 ring-purple-100">
+            <SectionHeading title="Mission" description="Our mission is to enable communities to thrive with education, health, and sustainable livelihoods." />
+            <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
+              Nayi Disha supports local leaders, builds trusted programs, and shares impact stories while preserving dignity and sustainability.
+            </p>
+          </section>
+          <section className="rounded-3xl bg-white p-6 sm:p-8 shadow-sm ring-1 ring-purple-100">
+            <SectionHeading title="Vision" description="A future where every child and family can access opportunity, care, and a sustainable path ahead." />
+            <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
+              We design scalable initiatives that grow with communities and adapt to evolving challenges in education, health, and empowerment.
+            </p>
+          </section>
+        </div>
+
+        <section className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-12 md:mt-16 lg:mt-20">
+          {featureCardsData.map((card) => (
+            <FeatureCard key={card.title} title={card.title} description={card.description} image={card.image} />
+          ))}
         </section>
-        <section className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-purple-100">
-          <SectionHeading title="Vision" description="A future where every child and family can access opportunity, care, and a sustainable path ahead." />
-          <p className="mt-4 text-slate-600">
-            We design scalable initiatives that grow with communities and adapt to evolving challenges in education, health, and empowerment.
-          </p>
+
+        <div className="mt-12 md:mt-16 lg:mt-20">
+          <SampleStats />
+        </div>
+
+        <section className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-12 md:mt-16 lg:mt-20">
+          {programSamples.map((program) => (
+            <ProgramCard key={program.title} title={program.title} description={program.description} image={program.image} />
+          ))}
         </section>
+
+        <section className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-12 md:mt-16 lg:mt-20">
+          {projectSamples.map((project) => (
+            <ProjectCard key={project.title} title={project.title} description={project.description} image={project.image} />
+          ))}
+        </section>
+
+        <div className="mt-12 md:mt-16 lg:mt-20">
+          <VideoPreview />
+        </div>
+
+        <div className="mt-12 md:mt-16 lg:mt-20">
+          <TestimonialSection />
+        </div>
       </div>
-
-      <section className="grid gap-6 lg:grid-cols-3">
-        {featureCardsData.map((card) => (
-          <FeatureCard key={card.title} title={card.title} description={card.description} image={card.image} />
-        ))}
-      </section>
-
-      <SampleStats />
-
-      <section className="grid gap-6 lg:grid-cols-3">
-        {programSamples.map((program) => (
-          <ProgramCard key={program.title} title={program.title} description={program.description} image={program.image} />
-        ))}
-      </section>
-
-      <section className="grid gap-6 lg:grid-cols-3">
-        {projectSamples.map((project) => (
-          <ProjectCard key={project.title} title={project.title} description={project.description} image={project.image} />
-        ))}
-      </section>
-
-      <VideoPreview />
-
-      <TestimonialSection />
     </div>
   )
 }

@@ -33,3 +33,102 @@ button {
 input, textarea, select {
   @apply transition-colors;
 }
+
+/* Mobile Responsive Utilities */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+
+  h4 {
+    @apply text-base;
+  }
+}
+
+/* Tablet Responsive Utilities */
+@media (min-width: 641px) and (max-width: 1024px) {
+  html {
+    font-size: 15px;
+  }
+
+  h1 {
+    @apply text-3xl;
+  }
+
+  h2 {
+    @apply text-2xl;
+  }
+
+  h3 {
+    @apply text-xl;
+  }
+}
+
+/* Touch device optimizations for mobile */
+@media (hover: none) and (pointer: coarse) {
+  button, a {
+    @apply min-h-[44px] min-w-[44px];
+  }
+
+  .touch-target {
+    @apply min-h-[48px] min-w-[48px];
+  }
+}
+
+/* Improved focus states for accessibility on mobile */
+@media (max-width: 768px) {
+  button:focus-visible {
+    @apply ring-2 ring-blue-500 ring-offset-2;
+  }
+
+  a:focus-visible {
+    @apply ring-2 ring-blue-500 ring-offset-2;
+  }
+}
+
+/* Reduce animations on mobile for better performance */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    @apply !transition-none !animate-none;
+  }
+}
+
+/* Improve readability on small screens */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+
+  .prose {
+    @apply text-sm;
+  }
+}
+
+/* Optimize grid layouts for mobile */
+@media (max-width: 768px) {
+  .grid-responsive {
+    @apply grid-cols-1;
+  }
+}
+
+@media (min-width: 769px) {
+  .grid-responsive {
+    @apply grid-cols-3;
+  }
+}

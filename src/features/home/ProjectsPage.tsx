@@ -9,12 +9,14 @@ const projects = [
 
 export function ProjectsPage() {
   return (
-    <section className="space-y-8 pb-8">
-      <SectionHeading title="Projects" description="Browse our current and completed community projects." />
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {projects.map((project) => (
-          <ProjectCard key={project.title} title={project.title} description={project.description} image={project.image} />
-        ))}
+    <section className="space-y-8 pb-8 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl w-full">
+        <SectionHeading title="Projects" description="Browse our current and completed community projects." />
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-8">
+          {projects.map((project) => (
+            <ProjectCard key={project.title} title={project.title} description={project.description} image={project.image} />
+          ))}
+        </div>
       </div>
     </section>
   )

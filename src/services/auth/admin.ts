@@ -1,4 +1,4 @@
-import { supabase } from '../supabase/storage'
+import { supabase } from '../../config/supabase'
 
 export async function adminSignup(email: string, password: string) {
   const { data, error } = await supabase.auth.signUp({
@@ -26,8 +26,27 @@ export async function adminLogout() {
 }
 
 export async function getCurrentAdmin() {
-  const { data } = await supabase.auth.getSession()
-  return data.session?.user || null
+  try {
+    // Get current session
+    const { data } = await supabase.auth.getSession()
+    const user = data.session?.user
+
+    if (!user) return null
+
+    // Verify token is still valid by refreshing session
+    const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession()
+
+    if (refreshError || !refreshData.session) {
+      // Token is invalid, clear session
+      await supabase.auth.signOut()
+      return null
+    }
+
+    return refreshData.session.user || user
+  } catch (error) {
+    console.error('Error getting current admin:', error)
+    return null
+  }
 }
 
 export async function isAdmin() {

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SectionHeading } from '../../components/ui/SectionHeading'
 import { adminLogin, adminSignup } from '../../services/auth/admin'
 
 const authSchema = z.object({
@@ -59,45 +58,49 @@ export function AdminLoginPage() {
   }
 
   return (
-    <section className="mx-auto max-w-xl space-y-8 rounded-3xl bg-white p-10 shadow-sm ring-1 ring-slate-200">
-      <SectionHeading
-        title={isSignUp ? 'Create Admin Account' : 'Admin Login'}
-        description={isSignUp ? 'Create a new admin account to manage media and content.' : 'Sign in to manage media, stories, and program content.'}
-      />
+    <section className="mx-auto max-w-md space-y-8 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 p-8 shadow-lg ring-1 ring-slate-200">
+      <div className="space-y-3 text-center">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+          {isSignUp ? 'Create Admin Account' : 'Admin Login'}
+        </h1>
+        <p className="text-sm text-slate-600">
+          {isSignUp ? 'Create a new admin account to manage media and content.' : 'Sign in to manage media, stories, and program content.'}
+        </p>
+      </div>
 
       {apiError && (
-        <div className="rounded-2xl bg-red-50 p-4 ring-1 ring-red-200">
-          <p className="text-sm text-red-700">{apiError}</p>
+        <div className="rounded-xl bg-red-50 p-4 border-l-4 border-red-600 shadow-sm">
+          <p className="text-sm font-medium text-red-900">{apiError}</p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">Email</label>
+          <label className="mb-2.5 block text-sm font-semibold text-slate-700">Email Address</label>
           <input
             type="email"
             {...register('email')}
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-slate-400"
+            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             placeholder="admin@foundation.org"
           />
-          {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email.message}</p>}
+          {errors.email && <p className="mt-2 text-sm font-medium text-red-600">{errors.email.message}</p>}
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-slate-700">Password</label>
+          <label className="mb-2.5 block text-sm font-semibold text-slate-700">Password</label>
           <input
             type="password"
             {...register('password')}
-            className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-slate-900 outline-none transition focus:border-slate-400"
+            className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-400 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
             placeholder="••••••••"
           />
-          {errors.password && <p className="mt-2 text-sm text-red-600">{errors.password.message}</p>}
+          {errors.password && <p className="mt-2 text-sm font-medium text-red-600">{errors.password.message}</p>}
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex w-full justify-center rounded-full bg-slate-900 px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-3 text-sm font-semibold text-white transition shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
           {isSubmitting ? (isSignUp ? 'Creating Account...' : 'Signing in...') : isSignUp ? 'Sign Up' : 'Sign In'}
         </button>

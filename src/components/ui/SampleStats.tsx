@@ -9,8 +9,8 @@ export function SampleStats() {
   ]
 
   return (
-    <section className="rounded-3xl bg-gradient-to-r from-purple-600 to-purple-800 px-8 py-12 text-white">
-      <div className="grid gap-8 md:grid-cols-4">
+    <section className="rounded-3xl bg-gradient-to-r from-purple-600 to-purple-800 px-4 sm:px-6 md:px-8 py-8 md:py-12 text-white">
+      <div className="grid gap-6 sm:gap-8 grid-cols-2 sm:grid-cols-2 md:grid-cols-4">
         {stats.map((stat, idx) => (
           <motion.div
             key={stat.label}
@@ -19,8 +19,8 @@ export function SampleStats() {
             transition={{ delay: idx * 0.1, duration: 0.5 }}
             className="text-center"
           >
-            <p className="text-4xl font-bold text-teal-300">{stat.value}</p>
-            <p className="mt-2 text-sm text-purple-100">{stat.label}</p>
+            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-teal-300">{stat.value}</p>
+            <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-purple-100 leading-tight">{stat.label}</p>
           </motion.div>
         ))}
       </div>

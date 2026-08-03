@@ -30,14 +30,14 @@ export function GalleryPreview({ showAll }: GalleryPreviewProps) {
   const images = showAll ? sampleImages : sampleImages.slice(0, 3)
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-6 sm:space-y-8">
       {!showAll && <SectionHeading title="Gallery" description="Featured images from our programs and initiatives." />}
-      <div className={`grid gap-4 sm:grid-cols-2 ${showAll ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}>
+      <div className={`grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 ${showAll ? 'md:grid-cols-3 lg:grid-cols-4' : 'md:grid-cols-3'}`}>
         {images.map((image) => (
           <article key={image.id} className="group relative overflow-hidden rounded-2xl bg-slate-900">
-            <img src={image.url} alt={image.title} className="h-48 w-full object-cover transition group-hover:scale-110 sm:h-56 lg:h-64" />
-            <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent p-4 opacity-0 transition group-hover:opacity-100">
-              <p className="text-sm font-medium text-white">{image.title}</p>
+            <img src={image.url} alt={image.title} className="h-40 sm:h-48 md:h-56 lg:h-64 w-full object-cover transition group-hover:scale-110" />
+            <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4 opacity-0 transition group-hover:opacity-100">
+              <p className="text-xs sm:text-sm font-medium text-white truncate">{image.title}</p>
               <p className="text-xs text-slate-300">{image.category}</p>
             </div>
           </article>

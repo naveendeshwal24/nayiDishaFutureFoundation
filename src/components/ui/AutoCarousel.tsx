@@ -61,7 +61,7 @@ export function AutoCarousel({ items, autoScrollInterval = 5000 }: AutoCarouselP
       onMouseLeave={handleMouseLeave}
     >
       {/* Main Carousel */}
-      <div className="relative h-80 w-full overflow-hidden bg-slate-950">
+      <div className="relative h-48 sm:h-64 md:h-80 w-full overflow-hidden bg-slate-950">
         {items.map((item, index) => (
           <div
             key={item.id}
@@ -80,11 +80,11 @@ export function AutoCarousel({ items, autoScrollInterval = 5000 }: AutoCarouselP
         ))}
 
         {/* Content Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-          <p className="mb-2 inline-block rounded-full bg-purple-500/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide backdrop-blur">
+        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6 text-white">
+          <p className="mb-1 sm:mb-2 inline-block rounded-full bg-purple-500/80 px-2 sm:px-3 py-0.5 sm:py-1 text-xs font-semibold uppercase tracking-wide backdrop-blur">
             {currentItem.category}
           </p>
-          <h3 className="text-2xl font-bold drop-shadow-lg sm:text-3xl">
+          <h3 className="text-base sm:text-2xl md:text-3xl font-bold drop-shadow-lg truncate sm:line-clamp-2">
             {currentItem.title}
           </h3>
         </div>
@@ -92,32 +92,32 @@ export function AutoCarousel({ items, autoScrollInterval = 5000 }: AutoCarouselP
         {/* Previous Button */}
         <button
           onClick={goToPrevious}
-          className="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/20 p-2 transition hover:bg-white/40 backdrop-blur"
+          className="absolute left-2 sm:left-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/20 p-1.5 sm:p-2 transition hover:bg-white/40 backdrop-blur"
           aria-label="Previous slide"
         >
-          <ChevronLeft className="h-6 w-6 text-white" />
+          <ChevronLeft className="h-4 sm:h-5 md:h-6 w-4 sm:w-5 md:w-6 text-white" />
         </button>
 
         {/* Next Button */}
         <button
           onClick={goToNext}
-          className="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/20 p-2 transition hover:bg-white/40 backdrop-blur"
+          className="absolute right-2 sm:right-4 top-1/2 z-20 -translate-y-1/2 rounded-full bg-white/20 p-1.5 sm:p-2 transition hover:bg-white/40 backdrop-blur"
           aria-label="Next slide"
         >
-          <ChevronRight className="h-6 w-6 text-white" />
+          <ChevronRight className="h-4 sm:h-5 md:h-6 w-4 sm:w-5 md:w-6 text-white" />
         </button>
       </div>
 
       {/* Dot Indicators */}
-      <div className="flex items-center justify-center gap-2 bg-slate-900 px-4 py-4">
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2 bg-slate-900 px-3 sm:px-4 py-3 sm:py-4">
         {items.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`h-2.5 rounded-full transition-all duration-300 ${
+            className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 ${
               index === currentIndex
-                ? 'w-8 bg-teal-500'
-                : 'w-2.5 bg-slate-600 hover:bg-slate-400'
+                ? 'w-6 sm:w-8 bg-teal-500'
+                : 'w-2 sm:w-2.5 bg-slate-600 hover:bg-slate-400'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

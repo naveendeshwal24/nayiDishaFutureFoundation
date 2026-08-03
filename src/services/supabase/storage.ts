@@ -1,14 +1,12 @@
-import { createClient } from '@supabase/supabase-js'
-import { supabaseConfig } from '../../config/supabase'
+import { supabase } from '../../config/supabase'
 import type { MediaItem } from '../../types/models'
-
-export const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey)
 
 /**
  * Get the full public URL for a file in Supabase storage
  */
 export function getStorageUrl(bucket: string, path: string): string {
-  return `${supabaseConfig.url}/storage/v1/object/public/${bucket}/${path}`
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+  return `${supabaseUrl}/storage/v1/object/public/${bucket}/${path}`
 }
 
 /**

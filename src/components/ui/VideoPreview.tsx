@@ -30,23 +30,23 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
   const videos = showAll ? sampleVideos : sampleVideos.slice(0, 3)
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-6 sm:space-y-8">
       {!showAll && <SectionHeading title="Videos" description="Watch our latest programs, events, and impact stories." />}
-      <div className={`grid gap-4 sm:grid-cols-2 ${showAll ? 'lg:grid-cols-3' : 'lg:grid-cols-3'}`}>
+      <div className={`grid gap-4 grid-cols-1 sm:grid-cols-2 ${showAll ? 'md:grid-cols-3' : 'md:grid-cols-3'}`}>
         {videos.map((video) => (
-          <button key={video.id} onClick={() => setSelectedVideo(video)} className="group relative overflow-hidden rounded-2xl bg-slate-900 cursor-pointer text-left">
-            <img src={video.thumbnail} alt={video.title} className="h-64 w-full object-cover transition group-hover:scale-110" />
+          <button key={video.id} onClick={() => setSelectedVideo(video)} className="group relative overflow-hidden rounded-2xl bg-slate-900 cursor-pointer text-left h-48 sm:h-56 md:h-64">
+            <img src={video.thumbnail} alt={video.title} className="h-full w-full object-cover transition group-hover:scale-110" />
             <div className="absolute inset-0 flex items-center justify-center transition group-hover:bg-black/50">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-slate-900 opacity-0 transition group-hover:opacity-100">
+              <div className="flex h-12 sm:h-14 md:h-16 w-12 sm:w-14 md:w-16 items-center justify-center rounded-full bg-white/90 text-slate-900 opacity-0 transition group-hover:opacity-100">
                 ▶
               </div>
             </div>
-            <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between bg-gradient-to-t from-black/80 to-transparent p-4">
-              <div>
-                <p className="text-sm font-medium text-white">{video.title}</p>
+            <div className="absolute bottom-0 left-0 right-0 flex items-end justify-between bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4">
+              <div className="min-w-0 flex-1">
+                <p className="text-xs sm:text-sm font-medium text-white truncate">{video.title}</p>
                 <p className="text-xs text-slate-300">{video.category}</p>
               </div>
-              <p className="text-xs font-medium text-white">{video.duration}</p>
+              <p className="text-xs font-medium text-white whitespace-nowrap ml-2">{video.duration}</p>
             </div>
           </button>
         ))}
@@ -65,12 +65,12 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
                 className="absolute inset-0 h-full w-full"
               />
             </div>
-            <div className="mt-4 flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-slate-900">{selectedVideo.title}</h3>
-                <p className="text-sm text-slate-600">{selectedVideo.category}</p>
+            <div className="mt-3 sm:mt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="min-w-0">
+                <h3 className="text-base sm:text-lg font-semibold text-slate-900 truncate">{selectedVideo.title}</h3>
+                <p className="text-xs sm:text-sm text-slate-600">{selectedVideo.category}</p>
               </div>
-              <button onClick={() => setSelectedVideo(null)} className="rounded-lg bg-slate-200 px-4 py-2 font-medium text-slate-900 hover:bg-slate-300">
+              <button onClick={() => setSelectedVideo(null)} className="rounded-lg bg-slate-200 px-3 sm:px-4 py-1.5 sm:py-2 font-medium text-slate-900 hover:bg-slate-300 text-sm whitespace-nowrap">
                 Close
               </button>
             </div>

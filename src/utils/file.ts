@@ -10,19 +10,56 @@ export function formatFileSize(bytes: number): string {
 }
 
 /**
- * Check if file is a valid image
+ * Get file extension from filename
  */
-export function isValidImageFile(file: File): boolean {
-  const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
-  return validTypes.includes(file.type)
+export function getFileExtension(filename: string): string {
+  return filename.split('.').pop()?.toLowerCase() || ''
 }
 
 /**
- * Check if file is a valid video
+ * Check if file is a valid image by extension (primary) and MIME type (fallback)
+ */
+export function isValidImageFile(file: File): boolean {
+  // Allowed image extensions
+  const validExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'bmp', 'svg']
+  const fileExtension = getFileExtension(file.name)
+
+  // If extension is valid, accept it
+  if (validExtensions.includes(fileExtension)) {
+    return true
+  }
+
+  // Fallback to MIME type check
+  const validMimeTypes = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/webp',
+    'image/gif',
+    'image/bmp',
+    'image/svg+xml',
+  ]
+
+  return validMimeTypes.includes(file.type)
+}
+
+/**
+ * Check if file is a valid video by extension (primary) and MIME type (fallback)
  */
 export function isValidVideoFile(file: File): boolean {
-  const validTypes = ['video/mp4', 'video/webm', 'video/quicktime']
-  return validTypes.includes(file.type)
+  // Allowed video extensions
+  const validExtensions = ['mp4', 'webm', 'mov', 'avi', 'mkv']
+  const fileExtension = getFileExtension(file.name)
+
+  // If extension is valid, accept it
+  if (validExtensions.includes(fileExtension)) {
+    return true
+  }
+
+  // Fallback to MIME type check
+  const validMimeTypes = ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo', 'video/x-matroska']
+
+  return validMimeTypes.includes(file.type)
 }
 
 /**

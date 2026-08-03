@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { AppRoutes } from '../../app/constants/routes'
 import { Logo } from './Logo'
 import { useDonateModal } from '../../app/contexts/DonateContext'
+import { Menu, X } from 'lucide-react'
 
 const links = [
   { label: 'Home', path: AppRoutes.home },
@@ -73,23 +74,24 @@ function getSocialIcon(icon: string) {
 export function SiteHeader() {
   const [selectedCountry, setSelectedCountry] = useState('India')
   const [isCountryOpen, setIsCountryOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { openDonateModal } = useDonateModal()
   const navigate = useNavigate()
 
   return (
-    <header className="border-b border-gray-200 bg-white">
+    <header className="border-b border-gray-200 bg-white sticky top-0 z-40">
       {/* Top Bar with Contact Info and Country Selector */}
-      <div className="bg-gray-50 border-b border-gray-200 px-4 py-2 sm:px-6 lg:px-8 text-xs text-gray-600">
-        <div className="mx-auto max-w-7xl flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <span>📍 Tender Notice</span>
-            <span>✉️ info@example.org</span>
-            <span>📞 +91-XXX-XXX-XXXX</span>
+      <div className="hidden md:block bg-gray-50 border-b border-gray-200 px-4 py-2 sm:px-6 lg:px-8 text-xs text-gray-600">
+        <div className="mx-auto max-w-7xl flex justify-between items-center flex-wrap gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+            <span className="whitespace-nowrap">📍 Tender Notice</span>
+            <span className="hidden sm:inline whitespace-nowrap">✉️ info@example.org</span>
+            <span className="hidden sm:inline whitespace-nowrap">📞 +91-XXX-XXX-XXXX</span>
           </div>
           <div className="relative">
             <button
               onClick={() => setIsCountryOpen(!isCountryOpen)}
-              className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 text-sm"
+              className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 text-sm whitespace-nowrap"
             >
               {selectedCountry}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,21 +121,35 @@ export function SiteHeader() {
       </div>
 
       {/* Main Header */}
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:py-4 sm:px-6 lg:px-8">
         {/* Logo Section */}
-        <NavLink to={AppRoutes.home} className="flex items-center gap-2">
+        <NavLink to={AppRoutes.home} className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           <Logo />
-          <span className="text-xs font-semibold text-gray-700 uppercase tracking-widest">NAYI DISHA<br />FUTURE FOUNDATION</span>
+          <span className="hidden sm:block text-xs font-semibold text-gray-700 uppercase tracking-widest leading-tight">NAYI DISHA<br />FUTURE FOUNDATION</span>
+          <span className="block sm:hidden text-xs font-semibold text-gray-700 uppercase tracking-widest">ND</span>
         </NavLink>
 
-        {/* Navigation Links */}
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="md:hidden flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 transition"
+          aria-label="Toggle menu"
+        >
+          {isMobileMenuOpen ? (
+            <X className="w-5 h-5" />
+          ) : (
+            <Menu className="w-5 h-5" />
+          )}
+        </button>
+
+        {/* Navigation Links - Desktop */}
+        <nav className="hidden items-center gap-6 md:gap-8 md:flex">
           {links.map((link) => (
             <NavLink
               key={link.path}
               to={link.path}
               className={({ isActive }) =>
-                `text-sm font-medium transition ${
+                `text-xs sm:text-sm font-medium transition whitespace-nowrap ${
                   isActive ? 'text-slate-900 border-b-2 border-orange-500' : 'text-slate-700 hover:text-slate-900'
                 }`
               }
@@ -143,16 +159,16 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        {/* Social Icons and Donate Button */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="flex gap-3">
+        {/* Social Icons and Donate Button - Desktop */}
+        <div className="hidden md:flex items-center gap-3">
+          <div className="flex gap-2">
             {socialLinks.map((social) => (
               <a
                 key={social.icon}
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700"
                 aria-label={social.label}
               >
                 {getSocialIcon(social.icon)}
@@ -161,18 +177,76 @@ export function SiteHeader() {
           </div>
           <button
             onClick={() => navigate('/admin/login')}
-            className="rounded-lg bg-slate-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-700 cursor-pointer"
+            className="rounded-lg bg-slate-600 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-slate-700 cursor-pointer whitespace-nowrap"
           >
             Admin
           </button>
           <button
             onClick={openDonateModal}
-            className="rounded-lg bg-orange-400 px-5 py-2 text-sm font-semibold text-white transition hover:bg-orange-500 cursor-pointer"
+            className="rounded-lg bg-orange-400 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-orange-500 cursor-pointer whitespace-nowrap"
           >
-            Donate now
+            Donate Now
+          </button>
+        </div>
+
+        {/* Mobile Action Buttons */}
+        <div className="flex md:hidden items-center gap-2">
+          <button
+            onClick={openDonateModal}
+            className="rounded-lg bg-orange-400 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-orange-500 cursor-pointer whitespace-nowrap"
+          >
+            Donate
           </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-gray-200 bg-white">
+          <nav className="flex flex-col px-4 py-3 sm:px-6">
+            {links.map((link) => (
+              <NavLink
+                key={link.path}
+                to={link.path}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `px-3 py-2 rounded-lg text-sm font-medium transition ${
+                    isActive ? 'bg-blue-50 text-blue-900' : 'text-gray-700 hover:bg-gray-100'
+                  }`
+                }
+              >
+                {link.label}
+              </NavLink>
+            ))}
+            <button
+              onClick={() => {
+                navigate('/admin/login')
+                setIsMobileMenuOpen(false)
+              }}
+              className="px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 transition text-left mt-2"
+            >
+              Admin Login
+            </button>
+          </nav>
+          <div className="border-t border-gray-200 px-4 py-3 sm:px-6">
+            <div className="flex gap-2 mb-3">
+              {socialLinks.slice(0, 3).map((social) => (
+                <a
+                  key={social.icon}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-white transition hover:bg-blue-700"
+                  aria-label={social.label}
+                >
+                  {getSocialIcon(social.icon)}
+                </a>
+              ))}
+            </div>
+            <p className="text-xs text-gray-600 mb-2">📍 Tender Notice | ✉️ info@example.org | 📞 +91-XXX-XXX-XXXX</p>
+          </div>
+        </div>
+      )}
     </header>
   )
 }

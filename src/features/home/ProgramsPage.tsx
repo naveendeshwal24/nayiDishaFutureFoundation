@@ -10,12 +10,14 @@ const programs = [
 
 export function ProgramsPage() {
   return (
-    <section className="space-y-8 pb-8">
-      <SectionHeading title="Our Programs" description="Explore the program areas we support with scalable community impact." />
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-        {programs.map((program) => (
-          <ProgramCard key={program.title} title={program.title} description={program.description} image={program.image} />
-        ))}
+    <section className="space-y-8 pb-8 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl w-full">
+        <SectionHeading title="Our Programs" description="Explore the program areas we support with scalable community impact." />
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 mt-8">
+          {programs.map((program) => (
+            <ProgramCard key={program.title} title={program.title} description={program.description} image={program.image} />
+          ))}
+        </div>
       </div>
     </section>
   )

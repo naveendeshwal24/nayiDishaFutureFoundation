@@ -1,88 +1,101 @@
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import type { MediaItem } from '../../types/models'
-import { SectionHeading } from '../../components/ui/SectionHeading'
-import { getStorageUrl } from '../../services/supabase/storage'
+import { getStorageUrl, getMediaItems, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
+import { useToast } from '../../components/ui/Toast'
 
 interface MediaListProps {
   type: 'image' | 'video'
 }
 
-const sampleMedia: MediaItem[] = [
-  {
-    id: '1',
-    title: 'School Children Learning',
-    category_id: '1',
-    type: 'image',
-    file_path: 'education/school-children.jpg',
-    mime_type: 'image/jpeg',
-    uploaded_at: '2026-07-10',
-    updated_at: '2026-07-10',
-    uploaded_by: 'admin@example.com',
-  },
-  {
-    id: '2',
-    title: 'Children Meal Program',
-    category_id: '2',
-    type: 'image',
-    file_path: 'health/meal-program.jpg',
-    mime_type: 'image/jpeg',
-    uploaded_at: '2026-07-08',
-    updated_at: '2026-07-08',
-    uploaded_by: 'admin@example.com',
-  },
-  {
-    id: '3',
-    title: 'Community Initiative',
-    category_id: '3',
-    type: 'video',
-    file_path: 'projects/initiative.mp4',
-    mime_type: 'video/mp4',
-    duration: 300,
-    thumbnail_url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRcXPt8XP_jx0rdeV4HcPtOH_Pe6nuNQmfL_WnU6cTQZw&s=800',
-    uploaded_at: '2026-07-05',
-    updated_at: '2026-07-05',
-    uploaded_by: 'admin@example.com',
-  },
-]
-
 export function MediaList({ type }: MediaListProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
-  const items = sampleMedia.filter((item) => item.type === type)
+  const [deleting, setDeleting] = useState(false)
+  const { error: showError } = useToast()
+
+  // Fetch media items from database
+  const { data: items = [], isLoading, error } = useQuery({
+    queryKey: ['media', type],
+    queryFn: () => getMediaItems({ type }),
+  })
 
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]))
   }
 
-  const handleDelete = (id: string) => {
-    alert(`Delete functionality: Would delete item ${id}`)
-    setSelectedIds((prev) => prev.filter((i) => i !== id))
+  const handleDelete = async (id: string) => {
+    const item = items.find((i) => i.id === id)
+    if (!item) return
+
+    if (!confirm(`Delete "${item.title}"?`)) return
+
+    setDeleting(true)
+    try {
+      const bucket = item.type === 'image' ? 'images' : 'videos'
+      await deleteFile(bucket, item.file_path)
+      await deleteMediaItem(id)
+      setSelectedIds((prev) => prev.filter((i) => i !== id))
+    } catch (err) {
+      showError(`Failed to delete: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } finally {
+      setDeleting(false)
+    }
   }
 
-  const handleBulkDelete = () => {
-    if (selectedIds.length === 0) {
-      alert('Select items to delete')
-      return
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return
+
+    if (!confirm(`Delete ${selectedIds.length} items?`)) return
+
+    setDeleting(true)
+    try {
+      for (const id of selectedIds) {
+        const item = items.find((i) => i.id === id)
+        if (item) {
+          const bucket = item.type === 'image' ? 'images' : 'videos'
+          await deleteFile(bucket, item.file_path)
+          await deleteMediaItem(id)
+        }
+      }
+      setSelectedIds([])
+    } catch (err) {
+      showError(`Bulk delete failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } finally {
+      setDeleting(false)
     }
-    alert(`Delete ${selectedIds.length} items?`)
-    setSelectedIds([])
   }
 
   const getImageUrl = (item: MediaItem) => {
-    if (item.file_path.startsWith('http')) {
-      return item.file_path
-    }
+    if (item.file_path.startsWith('http')) return item.file_path
     const bucket = item.type === 'image' ? 'images' : 'videos'
     return getStorageUrl(bucket, item.file_path)
   }
 
+  if (isLoading) {
+    return (
+      <div className="rounded-lg bg-slate-50 p-4 text-center">
+        <p className="text-xs text-slate-500">Loading media...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="rounded-lg bg-red-50 p-3 ring-1 ring-red-200">
+        <p className="text-xs text-red-700">Failed to load media: {error instanceof Error ? error.message : 'Unknown error'}</p>
+      </div>
+    )
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <SectionHeading title={type === 'image' ? 'Gallery Images' : 'Videos'} />
+        <h3 className="text-sm font-semibold text-slate-900">{type === 'image' ? 'Gallery Images' : 'Videos'}</h3>
         {selectedIds.length > 0 && (
           <button
             onClick={handleBulkDelete}
-            className="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+            disabled={deleting}
+            className="rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white transition hover:bg-red-700 disabled:opacity-50"
           >
             Delete {selectedIds.length}
           </button>
@@ -90,43 +103,43 @@ export function MediaList({ type }: MediaListProps) {
       </div>
 
       {items.length === 0 ? (
-        <div className="rounded-2xl border-2 border-dashed border-slate-300 py-12 text-center">
-          <p className="text-sm text-slate-500">No {type}s uploaded yet.</p>
+        <div className="rounded-lg border-2 border-dashed border-slate-300 py-6 text-center">
+          <p className="text-xs text-slate-500">No {type}s uploaded yet.</p>
         </div>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-2 md:grid-cols-3 lg:grid-cols-4">
           {items.map((item) => (
-            <div key={item.id} className="group relative overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-slate-200">
+            <div key={item.id} className="group relative overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-200">
               <input
                 type="checkbox"
                 checked={selectedIds.includes(item.id)}
                 onChange={() => toggleSelect(item.id)}
-                className="absolute left-3 top-3 z-10 h-4 w-4"
+                className="absolute left-2 top-2 z-10 h-3 w-3"
               />
 
               {type === 'image' ? (
-                <img src={getImageUrl(item)} alt={item.title} className="h-40 w-full object-cover transition group-hover:scale-105" />
+                <img src={getImageUrl(item)} alt={item.title} className="h-24 w-full object-cover transition group-hover:scale-105" />
               ) : (
-                <div className="relative h-40 w-full bg-slate-900">
+                <div className="relative h-24 w-full bg-slate-900">
                   <img src={item.thumbnail_url || getImageUrl(item)} alt={item.title} className="h-full w-full object-cover opacity-60" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-3xl text-white">▶</span>
+                    <span className="text-xl text-white">▶</span>
                   </div>
                 </div>
               )}
 
-              <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-transparent p-3 opacity-0 transition group-hover:opacity-100">
+              <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-transparent p-2 opacity-0 transition group-hover:opacity-100">
                 <div></div>
                 <div>
-                  <p className="text-sm font-medium text-white">{item.title}</p>
-                  <p className="text-xs text-slate-300">{item.description || 'No description'}</p>
+                  <p className="text-xs font-medium text-white">{item.title}</p>
                 </div>
               </div>
 
-              <div className="absolute right-2 top-2 opacity-0 transition group-hover:opacity-100">
+              <div className="absolute right-1 top-1">
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="rounded-full bg-red-600 p-2 text-white transition hover:bg-red-700"
+                  disabled={deleting}
+                  className="rounded bg-red-600 p-1 text-white transition hover:bg-red-700 disabled:opacity-50"
                 >
                   ✕
                 </button>
