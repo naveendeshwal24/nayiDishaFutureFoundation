@@ -104,8 +104,9 @@ media_categories (1)
 
 ### 2. Create Storage Buckets
 - Go to Supabase Dashboard → Storage
-- Create `images` bucket (Public)
-- Create `videos` bucket (Public)
+- Create `images` bucket (Public), 50MB file size limit
+- Create `videos` bucket (Public), 50MB file size limit
+- **Required:** Run `database/schema.sql` (step 1) *after* creating the buckets — it includes the `storage.objects` RLS policies that allow authenticated admins to upload/update/delete files. A "Public" bucket alone only grants read access; without these policies, uploads fail with "new row violates row-level security policy".
 
 ### 3. Upload Media
 ```typescript
@@ -169,9 +170,10 @@ NayiDishaFoundation/
 
 ## ✅ Checklist
 
-- [ ] Create SQL schema in Supabase
+- [ ] Create SQL schema in Supabase (includes `storage.objects` upload policies)
 - [ ] Create `images` storage bucket
 - [ ] Create `videos` storage bucket
+- [ ] Verify storage policies exist under Storage → Policies for both buckets
 - [ ] Test file upload
 - [ ] Test metadata retrieval
 - [ ] Setup admin authentication

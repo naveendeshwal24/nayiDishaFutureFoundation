@@ -16,6 +16,7 @@ export function AdminLoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSignUp, setIsSignUp] = useState(false)
   const [apiError, setApiError] = useState<string | null>(null)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
   const navigate = useNavigate()
 
   const {
@@ -35,7 +36,7 @@ export function AdminLoginPage() {
       if (isSignUp) {
         await adminSignup(data.email, data.password)
         setApiError(null)
-        alert('Signup successful! Please check your email to confirm your account, then login.')
+        setSuccessMessage('Signup successful! Please check your email to confirm your account, then login.')
         setIsSignUp(false)
         reset()
       } else {
@@ -125,6 +126,27 @@ export function AdminLoginPage() {
           <strong>Note:</strong> After signing up, you'll receive a confirmation email. Verify your email to activate your admin account and login.
         </p>
       </div>
+
+      {successMessage && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl">
+            <div className="mb-4 flex items-center gap-3">
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
+                <span className="text-lg text-green-600">✓</span>
+              </div>
+              <h3 className="text-lg font-bold text-slate-900">Success</h3>
+            </div>
+            <p className="mb-6 text-sm text-slate-600">{successMessage}</p>
+            <button
+              type="button"
+              onClick={() => setSuccessMessage(null)}
+              className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-2.5 text-sm font-semibold text-white transition shadow-md hover:shadow-lg hover:from-blue-700 hover:to-blue-800"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

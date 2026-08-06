@@ -101,5 +101,39 @@ CREATE POLICY "Allow public read access to media_categories"
   USING (true);
 
 -- ============================================
+-- POLICIES: storage.objects (images / videos buckets)
+-- ============================================
+-- IMPORTANT CONCEPT:
+-- Marking a Storage bucket "Public" in the Supabase Dashboard only affects
+-- READ access (downloading/viewing files via the public URL). It does NOT
+-- grant permission to upload, update, or delete files. Every write
+-- operation to storage.objects is still governed by Postgres Row Level
+-- Security, exactly like any other table. Without the policies below,
+-- uploads fail with: "new row violates row-level security policy".
+
+-- Policy 1: Allow anyone to read files from the public buckets
+CREATE POLICY "Allow public read access to media buckets"
+  ON storage.objects FOR SELECT
+  USING (bucket_id IN ('images', 'videos'));
+
+-- Policy 2: Allow authenticated users (logged-in admins) to upload files
+CREATE POLICY "Allow authenticated uploads to media buckets"
+  ON storage.objects FOR INSERT
+  TO authenticated
+  WITH CHECK (bucket_id IN ('images', 'videos'));
+
+-- Policy 3: Allow authenticated users to overwrite/update their files
+CREATE POLICY "Allow authenticated updates to media buckets"
+  ON storage.objects FOR UPDATE
+  TO authenticated
+  USING (bucket_id IN ('images', 'videos'));
+
+-- Policy 4: Allow authenticated users to delete files (used by MediaList)
+CREATE POLICY "Allow authenticated deletes from media buckets"
+  ON storage.objects FOR DELETE
+  TO authenticated
+  USING (bucket_id IN ('images', 'videos'));
+
+-- ============================================
 -- END OF SCHEMA
 -- ============================================

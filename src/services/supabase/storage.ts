@@ -47,7 +47,7 @@ export async function saveMediaMetadata(mediaItem: Omit<MediaItem, 'id' | 'uploa
  * Get all media items with optional filtering
  */
 export async function getMediaItems(filters?: { type?: 'image' | 'video'; category_id?: string }) {
-  let query = supabase.from('media_items').select('*, media_categories(*)')
+  let query = supabase.from('media_items').select('*, category:media_categories(*)')
 
   if (filters?.type) {
     query = query.eq('type', filters.type)
@@ -68,7 +68,7 @@ export async function getMediaItems(filters?: { type?: 'image' | 'video'; catego
 export async function getMediaItem(id: string) {
   const { data, error } = await supabase
     .from('media_items')
-    .select('*, media_categories(*)')
+    .select('*, category:media_categories(*)')
     .eq('id', id)
     .single()
 

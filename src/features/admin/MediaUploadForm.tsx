@@ -1,14 +1,12 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { mediaUploadSchema, type MediaUploadInput } from '../../schemas/media'
 import { formatFileSize, isValidImageFile, isValidVideoFile, generateFilename } from '../../utils/file'
-import { uploadFile, saveMediaMetadata } from '../../services/supabase/storage'
+import { uploadFile, saveMediaMetadata, getMediaCategories } from '../../services/supabase/storage'
 import { getCurrentAdmin } from '../../services/auth/admin'
 import { useToast } from '../../components/ui/Toast'
-
-const categories = ['Education', 'Health', 'Empowerment', 'Environment', 'Events', 'Projects', 'Stories']
 
 export function MediaUploadForm() {
   const [preview, setPreview] = useState<string | null>(null)
@@ -18,22 +16,33 @@ export function MediaUploadForm() {
   const queryClient = useQueryClient()
   const { success: showSuccess, error: showError } = useToast()
 
+  // Load real categories (with UUID ids) from the database
+  const { data: categories = [] } = useQuery({
+    queryKey: ['media-categories'],
+    queryFn: getMediaCategories,
+  })
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
     watch,
+    setValue,
   } = useForm<MediaUploadInput>({
     resolver: zodResolver(mediaUploadSchema),
   })
 
   const fileInput = watch('file')
   const typeInput = watch('type')
+  const { ref: fileRef, name: fileName, onBlur: fileOnBlur } = register('file')
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    // Store the actual File (not the FileList) so zod's instanceof(File) check passes
+    setValue('file', file, { shouldValidate: true })
 
     // Show preview immediately for all supported formats
     if (typeInput === 'image') {
@@ -66,10 +75,12 @@ export function MediaUploadForm() {
 
       const bucket = values.type === 'image' ? 'images' : 'videos'
       const filename = generateFilename(file.name, values.type)
-      const filePath = `${values.category.toLowerCase()}/${filename}`
+      const categoryName = categories.find((cat) => cat.id === values.category)?.name || 'general'
+      const filePath = `${categoryName.toLowerCase()}/${filename}`
 
       // Upload file to Supabase storage
       await uploadFile(bucket, filePath, file)
+      console.log("bucket, filePath, file :- ", bucket, filePath, file)
 
       // Get current admin user
       const adminUser = await getCurrentAdmin()
@@ -97,7 +108,10 @@ export function MediaUploadForm() {
       // Show success toast
       showSuccess(`✓ ${filename} uploaded (${formatFileSize(file.size)})`)
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      const rawMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      const errorMessage = rawMessage.toLowerCase().includes('row-level security')
+        ? 'Upload blocked by Supabase storage permissions. The "images"/"videos" buckets need RLS policies allowing authenticated uploads — run the storage policies in database/schema.sql from the Supabase SQL Editor.'
+        : rawMessage
       setUploadError(errorMessage)
       showError(errorMessage)
       console.error('Upload error:', error)
@@ -145,8 +159,8 @@ export function MediaUploadForm() {
           >
             <option value="">Select category</option>
             {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
               </option>
             ))}
           </select>
@@ -180,7 +194,9 @@ export function MediaUploadForm() {
         <div className="rounded-lg border-2 border-dashed border-slate-300 p-3 text-center">
           <input
             type="file"
-            {...register('file')}
+            ref={fileRef}
+            name={fileName}
+            onBlur={fileOnBlur}
             onChange={handleFileChange}
             className="hidden"
             id="file-input"

@@ -109,7 +109,7 @@ export function MediaList({ type }: MediaListProps) {
       ) : (
         <div className="grid gap-2 md:grid-cols-3 lg:grid-cols-4">
           {items.map((item) => (
-            <div key={item.id} className="group relative overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-200">
+            <div key={item.id} className="group relative isolate overflow-visible rounded-lg bg-slate-100 ring-1 ring-slate-200">
               <input
                 type="checkbox"
                 checked={selectedIds.includes(item.id)}
@@ -117,33 +117,35 @@ export function MediaList({ type }: MediaListProps) {
                 className="absolute left-2 top-2 z-10 h-3 w-3"
               />
 
-              {type === 'image' ? (
-                <img src={getImageUrl(item)} alt={item.title} className="h-24 w-full object-cover transition group-hover:scale-105" />
-              ) : (
-                <div className="relative h-24 w-full bg-slate-900">
-                  <img src={item.thumbnail_url || getImageUrl(item)} alt={item.title} className="h-full w-full object-cover opacity-60" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-xl text-white">▶</span>
+              <div className="overflow-hidden rounded-lg">
+                {type === 'image' ? (
+                  <img src={getImageUrl(item)} alt={item.title} className="h-24 w-full object-cover transition group-hover:scale-105" />
+                ) : (
+                  <div className="relative h-24 w-full bg-slate-900">
+                    <video src={getImageUrl(item)} className="h-full w-full object-cover opacity-60" muted preload="metadata" />
+                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                      <span className="text-xl text-white">▶</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="pointer-events-none absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-transparent p-2 opacity-0 transition group-hover:opacity-100">
+                  <div></div>
+                  <div>
+                    <p className="text-xs font-medium text-white">{item.title}</p>
                   </div>
                 </div>
-              )}
-
-              <div className="absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-black/80 via-transparent to-transparent p-2 opacity-0 transition group-hover:opacity-100">
-                <div></div>
-                <div>
-                  <p className="text-xs font-medium text-white">{item.title}</p>
-                </div>
               </div>
 
-              <div className="absolute right-1 top-1">
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  disabled={deleting}
-                  className="rounded bg-red-600 p-1 text-white transition hover:bg-red-700 disabled:opacity-50"
-                >
-                  ✕
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => handleDelete(item.id)}
+                disabled={deleting}
+                aria-label={`Delete ${item.title}`}
+                className="absolute -right-2 -top-2 z-30 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white bg-red-600 text-xs font-bold text-white shadow-md transition hover:bg-red-700 disabled:opacity-50"
+              >
+                ✕
+              </button>
             </div>
           ))}
         </div>
