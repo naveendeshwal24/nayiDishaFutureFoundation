@@ -5,10 +5,6 @@
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/$1"
-    },
-    {
-      "source": "/(?!dist/.*|_.*)",
       "destination": "/index.html"
     }
   ],
