@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { SectionHeading } from './SectionHeading'
-import { getMediaItems, getStorageUrl } from '../../services/supabase/storage'
+import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
+import { useIsAdmin } from '../../hooks/useIsAdmin'
+import { useToast } from './Toast'
 import type { MediaItem } from '../../types/models'
 
 interface VideoPreviewProps {
@@ -10,6 +12,10 @@ interface VideoPreviewProps {
 
 export function VideoPreview({ showAll }: VideoPreviewProps) {
   const [selectedVideo, setSelectedVideo] = useState<MediaItem | null>(null)
+  const isAdmin = useIsAdmin()
+  const queryClient = useQueryClient()
+  const { error: showError } = useToast()
+  const [deletingId, setDeletingId] = useState<string | null>(null)
 
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'video'],
@@ -17,6 +23,22 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
   })
 
   const videos = showAll ? items : items.slice(0, 3)
+
+  const handleDelete = async (e: React.MouseEvent, video: MediaItem) => {
+    e.stopPropagation()
+    if (!confirm(`Remove "${video.title}"?`)) return
+
+    setDeletingId(video.id)
+    try {
+      await deleteFile('videos', video.file_path)
+      await deleteMediaItem(video.id)
+      await queryClient.invalidateQueries({ queryKey: ['media'] })
+    } catch (err) {
+      showError(`Failed to remove: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   return (
     <section className="space-y-6 sm:space-y-8">
@@ -43,6 +65,18 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
                 <p className="text-xs text-slate-300">{video.category?.name}</p>
               </div>
             </div>
+            {isAdmin && (
+              <span
+                role="button"
+                tabIndex={0}
+                onClick={(e) => handleDelete(e, video)}
+                aria-label={`Remove ${video.title}`}
+                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-600 text-xs font-bold text-white shadow-md transition hover:bg-red-700"
+                style={{ opacity: deletingId === video.id ? 0.5 : 1, pointerEvents: deletingId === video.id ? 'none' : 'auto' }}
+              >
+                ✕
+              </span>
+            )}
           </button>
         ))}
       </div>

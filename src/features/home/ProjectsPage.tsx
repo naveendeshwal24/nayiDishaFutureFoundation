@@ -1,15 +1,38 @@
-import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { SectionHeading } from '../../components/ui/SectionHeading'
 import { ProjectCard } from '../../components/ui/ProjectCard'
-import { getMediaItems, getStorageUrl } from '../../services/supabase/storage'
+import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
+import { useIsAdmin } from '../../hooks/useIsAdmin'
+import { useToast } from '../../components/ui/Toast'
 
 export function ProjectsPage() {
+  const isAdmin = useIsAdmin()
+  const queryClient = useQueryClient()
+  const { error: showError } = useToast()
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'projects'],
     queryFn: () => getMediaItems(),
   })
 
   const projects = items.filter((item) => item.category?.name === 'Projects')
+
+  const handleDelete = async (id: string, filePath: string, title: string, type: 'image' | 'video') => {
+    if (!confirm(`Remove "${title}"?`)) return
+
+    setDeletingId(id)
+    try {
+      await deleteFile(type === 'image' ? 'images' : 'videos', filePath)
+      await deleteMediaItem(id)
+      await queryClient.invalidateQueries({ queryKey: ['media'] })
+    } catch (err) {
+      showError(`Failed to remove: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   return (
     <section className="space-y-8 pb-8 px-4 sm:px-6 lg:px-8">
@@ -29,6 +52,8 @@ export function ProjectsPage() {
               title={project.title}
               description={project.description || ''}
               image={project.type === 'image' ? getStorageUrl('images', project.file_path) : undefined}
+              onDelete={isAdmin ? () => handleDelete(project.id, project.file_path, project.title, project.type) : undefined}
+              deleting={deletingId === project.id}
             />
           ))}
         </div>

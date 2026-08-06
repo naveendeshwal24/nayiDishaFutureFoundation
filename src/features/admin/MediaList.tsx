@@ -1,22 +1,34 @@
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import type { MediaItem } from '../../types/models'
 import { getStorageUrl, getMediaItems, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
 import { useToast } from '../../components/ui/Toast'
 
 interface MediaListProps {
   type: 'image' | 'video'
+  /** Only show items whose category name matches (e.g. "Projects") */
+  categoryFilter?: string
+  /** Hide items whose category name matches (e.g. exclude "Projects" from the Gallery tab) */
+  excludeCategory?: string
+  label?: string
 }
 
-export function MediaList({ type }: MediaListProps) {
+export function MediaList({ type, categoryFilter, excludeCategory, label }: MediaListProps) {
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [deleting, setDeleting] = useState(false)
   const { error: showError } = useToast()
+  const queryClient = useQueryClient()
 
   // Fetch media items from database
-  const { data: items = [], isLoading, error } = useQuery({
+  const { data: allItems = [], isLoading, error } = useQuery({
     queryKey: ['media', type],
     queryFn: () => getMediaItems({ type }),
+  })
+
+  const items = allItems.filter((item) => {
+    if (categoryFilter) return item.category?.name === categoryFilter
+    if (excludeCategory) return item.category?.name !== excludeCategory
+    return true
   })
 
   const toggleSelect = (id: string) => {
@@ -34,6 +46,7 @@ export function MediaList({ type }: MediaListProps) {
       const bucket = item.type === 'image' ? 'images' : 'videos'
       await deleteFile(bucket, item.file_path)
       await deleteMediaItem(id)
+      await queryClient.invalidateQueries({ queryKey: ['media'] })
       setSelectedIds((prev) => prev.filter((i) => i !== id))
     } catch (err) {
       showError(`Failed to delete: ${err instanceof Error ? err.message : 'Unknown error'}`)
@@ -57,6 +70,7 @@ export function MediaList({ type }: MediaListProps) {
           await deleteMediaItem(id)
         }
       }
+      await queryClient.invalidateQueries({ queryKey: ['media'] })
       setSelectedIds([])
     } catch (err) {
       showError(`Bulk delete failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
@@ -90,7 +104,7 @@ export function MediaList({ type }: MediaListProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-slate-900">{type === 'image' ? 'Gallery Images' : 'Videos'}</h3>
+        <h3 className="text-sm font-semibold text-slate-900">{label || (type === 'image' ? 'Gallery Images' : 'Videos')}</h3>
         {selectedIds.length > 0 && (
           <button
             onClick={handleBulkDelete}

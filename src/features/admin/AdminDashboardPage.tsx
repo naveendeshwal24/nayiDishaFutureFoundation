@@ -13,7 +13,7 @@ interface AdminUser {
 }
 
 export function AdminDashboardPage() {
-  const [activeTab, setActiveTab] = useState<'gallery' | 'videos'>('gallery')
+  const [activeTab, setActiveTab] = useState<'gallery' | 'projects' | 'videos'>('gallery')
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const navigate = useNavigate()
@@ -83,7 +83,17 @@ export function AdminDashboardPage() {
               : 'text-slate-600 hover:bg-slate-50'
           }`}
         >
-          🖼️ Images
+          🖼️ Gallery
+        </button>
+        <button
+          onClick={() => setActiveTab('projects')}
+          className={`flex-1 rounded px-3 py-2 text-xs font-semibold transition ${
+            activeTab === 'projects'
+              ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow'
+              : 'text-slate-600 hover:bg-slate-50'
+          }`}
+        >
+          🏗️ Projects
         </button>
         <button
           onClick={() => setActiveTab('videos')}
@@ -99,8 +109,9 @@ export function AdminDashboardPage() {
 
       <MediaUploadForm />
 
-      {activeTab === 'gallery' && <MediaList type="image" />}
-      {activeTab === 'videos' && <MediaList type="video" />}
+      {activeTab === 'gallery' && <MediaList type="image" excludeCategory="Projects" label="Gallery Images" />}
+      {activeTab === 'projects' && <MediaList type="image" categoryFilter="Projects" label="Project Images" />}
+      {activeTab === 'videos' && <MediaList type="video" label="Videos" />}
     </section>
   )
 }

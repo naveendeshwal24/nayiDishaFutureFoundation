@@ -1,18 +1,41 @@
-import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { SectionHeading } from './SectionHeading'
-import { getMediaItems, getStorageUrl } from '../../services/supabase/storage'
+import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
+import { useIsAdmin } from '../../hooks/useIsAdmin'
+import { useToast } from './Toast'
 
 interface GalleryPreviewProps {
   showAll?: boolean
 }
 
 export function GalleryPreview({ showAll }: GalleryPreviewProps) {
+  const isAdmin = useIsAdmin()
+  const queryClient = useQueryClient()
+  const { error: showError } = useToast()
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'image'],
     queryFn: () => getMediaItems({ type: 'image' }),
   })
 
   const images = showAll ? items : items.slice(0, 3)
+
+  const handleDelete = async (id: string, filePath: string, title: string) => {
+    if (!confirm(`Remove "${title}"?`)) return
+
+    setDeletingId(id)
+    try {
+      await deleteFile('images', filePath)
+      await deleteMediaItem(id)
+      await queryClient.invalidateQueries({ queryKey: ['media'] })
+    } catch (err) {
+      showError(`Failed to remove: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   return (
     <section className="space-y-6 sm:space-y-8">
@@ -36,6 +59,17 @@ export function GalleryPreview({ showAll }: GalleryPreviewProps) {
               <p className="text-xs sm:text-sm font-medium text-white truncate">{image.title}</p>
               <p className="text-xs text-slate-300">{image.category?.name}</p>
             </div>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => handleDelete(image.id, image.file_path, image.title)}
+                disabled={deletingId === image.id}
+                aria-label={`Remove ${image.title}`}
+                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-600 text-xs font-bold text-white shadow-md transition hover:bg-red-700 disabled:opacity-50"
+              >
+                ✕
+              </button>
+            )}
           </article>
         ))}
       </div>

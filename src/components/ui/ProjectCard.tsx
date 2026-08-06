@@ -2,11 +2,24 @@ interface ProjectCardProps {
   title: string
   description: string
   image?: string
+  onDelete?: () => void
+  deleting?: boolean
 }
 
-export function ProjectCard({ title, description, image }: ProjectCardProps) {
+export function ProjectCard({ title, description, image, onDelete, deleting }: ProjectCardProps) {
   return (
-    <article className="rounded-3xl bg-gradient-to-br from-orange-50 to-orange-100 ring-1 ring-orange-200 transition hover:shadow-lg hover:ring-orange-300 overflow-hidden">
+    <article className="relative rounded-3xl bg-gradient-to-br from-orange-50 to-orange-100 ring-1 ring-orange-200 transition hover:shadow-lg hover:ring-orange-300 overflow-hidden">
+      {onDelete && (
+        <button
+          type="button"
+          onClick={onDelete}
+          disabled={deleting}
+          aria-label={`Remove ${title}`}
+          className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-600 text-xs font-bold text-white shadow-md transition hover:bg-red-700 disabled:opacity-50"
+        >
+          ✕
+        </button>
+      )}
       {image && (
         <div className="h-40 w-full overflow-hidden bg-orange-200">
           <img
