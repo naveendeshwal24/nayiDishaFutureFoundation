@@ -2,7 +2,6 @@ import { Cpu, Crown, ShieldCheck, Users } from 'lucide-react'
 import { SectionHeading } from '../../components/ui/SectionHeading'
 import { useSeo } from '../../hooks/useSeo'
 import presidentImage from '../../assets/images/president.jpeg'
-import subPresidentImage from '../../assets/images/sub-president.jpeg'
 import naveenImage from '../../assets/images/Naveen_IT.jpeg'
 import premImage from '../../assets/images/Prem.jpeg'
 import mahenderImage from '../../assets/images/Mahender.jpeg'
@@ -19,17 +18,17 @@ interface Member {
 }
 
 const president: Member = {
-  name: 'President, Name',
+  name: 'Narendra Kumar',
   designation: 'President',
   description: 'Leads the trust\u2019s overall vision, strategy, and community initiatives.',
   image: presidentImage,
 }
 
-const subPresident: Member = {
-  name: 'Sub-President, Name',
-  designation: 'Sub-President',
+const vicePresident: Member = {
+  name: 'Sanjay Kumar',
+  designation: 'Vice President',
   description: 'Supports the President and oversees day-to-day program execution.',
-  image: subPresidentImage,
+  image: sanjayImage,
 }
 
 const itMember: Member = {
@@ -39,15 +38,17 @@ const itMember: Member = {
   image: naveenImage,
 }
 
+// Row order: Mahender, Preet Panchal, Rahul Panchal / Vijay, Arjun, Prem / Omprakash, Devender, Dilip Panchal
 const trustMembers: Member[] = [
-  { name: 'Prem', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.', image: premImage },
-  { name: 'Mahender', designation: 'Trust Member', description: 'Assists with program planning and volunteer management.', image: mahenderImage },
-  { name: 'Omprakash', designation: 'Trust Member', description: 'Oversees resource management and logistics for trust activities.', image: omprakashImage },
+  { name: 'Mahender Kumar', designation: 'Trust Member', description: 'Holds all finance responsibilities, managing the trust\u2019s accounts and funds.', image: mahenderImage },
+  { name: 'Preet Panchal', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Rahul Panchal', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
   { name: 'Vijay', designation: 'Trust Member', description: 'Manages field operations and community engagement.', image: vijayImage },
   { name: 'Arjun', designation: 'Trust Member', description: 'Supports administrative work and record keeping for the trust.', image: arjunImage },
-  { name: 'Sanjay', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.', image: sanjayImage },
-  { name: 'Trust Member, Name', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
-  { name: 'Trust Member, Name', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Prem', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.', image: premImage },
+  { name: 'Omprakash', designation: 'Trust Member', description: 'Oversees resource management and logistics for trust activities.', image: omprakashImage },
+  { name: 'Devender', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Dilip Panchal', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
 ]
 
 const avatarPalette = [
@@ -71,10 +72,6 @@ function getInitials(name: string) {
 function getAvatarColor(name: string) {
   const index = name.charCodeAt(0) % avatarPalette.length
   return avatarPalette[index]
-}
-
-function Connector({ className = '' }: { className?: string }) {
-  return <div className={`w-px bg-slate-400 ${className}`} />
 }
 
 function MemberAvatar({ name, image, sizeClass }: { name: string; image?: string; sizeClass: string }) {
@@ -142,10 +139,8 @@ function MemberCard({ member, highlighted }: { member: Member; highlighted?: boo
 export function TrustMembersPage() {
   useSeo(
     'Trust Members | Nayi Disha Future Foundation',
-    'Meet the President, Sub-President, and Trust Members leading Nayi Disha Future Foundation.'
+    'Meet the President, Vice President, and Trust Members leading Nayi Disha Future Foundation.'
   )
-
-  const membersRow = [itMember, ...trustMembers]
 
   return (
     <section className="space-y-10 pb-12">
@@ -154,49 +149,46 @@ export function TrustMembersPage() {
         description="Meet the people behind Nayi Disha Future Foundation and the organizational structure that guides our mission."
       />
 
-      <div className="flex flex-col items-center">
-        {/* President */}
-        <LeaderCard
-          member={president}
-          icon={<Crown className="h-3.5 w-3.5 text-orange-500" />}
-          gradient="from-orange-50 to-orange-100"
-          ring="ring-orange-300"
-          size="lg"
-        />
+      <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-start lg:justify-center lg:gap-12">
+        {/* Leadership: President, Vice President, IT Member - kept separate from the team hierarchy */}
+        <div className="flex flex-col items-center gap-6 lg:w-72 lg:shrink-0">
+          <LeaderCard
+            member={president}
+            icon={<Crown className="h-3.5 w-3.5 text-orange-500" />}
+            gradient="from-orange-50 to-orange-100"
+            ring="ring-orange-300"
+            size="lg"
+          />
 
-        <Connector className="h-8 sm:h-10" />
+          <LeaderCard
+            member={vicePresident}
+            icon={<ShieldCheck className="h-3.5 w-3.5 text-sky-500" />}
+            gradient="from-sky-50 to-sky-100"
+            ring="ring-sky-300"
+            size="md"
+          />
 
-        {/* Sub-President */}
-        <LeaderCard
-          member={subPresident}
-          icon={<ShieldCheck className="h-3.5 w-3.5 text-sky-500" />}
-          gradient="from-sky-50 to-sky-100"
-          ring="ring-sky-300"
-          size="md"
-        />
-
-        <Connector className="h-8 sm:h-10" />
-
-        {/* Branch header for IT Member + Trust Members */}
-        <div className="hidden md:flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
-          <Users className="h-3.5 w-3.5" />
-          IT Member &amp; Trust Members
-        </div>
-        <Connector className="hidden md:block h-6" />
-
-        {/* Horizontal connector bar (desktop only) */}
-        <div className="hidden md:block relative w-full max-w-4xl">
-          <div className="absolute left-[10%] right-[10%] top-0 h-px bg-slate-400" />
+          <LeaderCard
+            member={itMember}
+            icon={<Cpu className="h-3.5 w-3.5 text-indigo-500" />}
+            gradient="from-indigo-50 to-indigo-100"
+            ring="ring-indigo-300"
+            size="md"
+          />
         </div>
 
-        {/* Members grid with stem connectors */}
-        <div className="grid w-full max-w-4xl grid-cols-1 gap-6 pt-0 sm:grid-cols-2 md:grid-cols-3 md:gap-8 md:pt-0">
-          {membersRow.map((member, index) => (
-            <div key={`${member.name}-${index}`} className="flex flex-col items-center">
-              <Connector className={`h-6 ${index === 0 ? 'hidden md:block' : 'block sm:hidden md:block'}`} />
-              <MemberCard member={member} highlighted={index === 0} />
-            </div>
-          ))}
+        {/* Team members, positioned beside leadership rather than beneath it */}
+        <div className="flex w-full max-w-4xl flex-col items-center gap-6">
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+            <Users className="h-3.5 w-3.5" />
+            Trust Members
+          </div>
+
+          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
+            {trustMembers.map((member, index) => (
+              <MemberCard key={`${member.name}-${index}`} member={member} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
