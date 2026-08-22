@@ -51,49 +51,53 @@ export function TestimonialCarousel({
           <img
             src={currentTestimonial.image}
             alt={currentTestimonial.name}
-            className="w-32 sm:w-40 md:w-48 h-32 sm:h-40 md:h-48 rounded-full object-cover border-4 border-white flex-shrink-0"
+            className="w-24 sm:w-40 md:w-48 h-24 sm:h-40 md:h-48 rounded-full object-cover border-4 border-white flex-shrink-0"
           />
         </div>
 
         {/* Content */}
-        <div className="flex-1 text-white">
-          <p className="text-sm sm:text-base md:text-lg leading-relaxed mb-4 md:mb-6 italic text-center md:text-left">
+        <div className="flex-1 w-full text-white">
+          <p className="text-sm sm:text-base md:text-lg leading-relaxed mb-3 md:mb-6 italic text-center md:text-left">
             &quot;{currentTestimonial.text}&quot;
           </p>
-          <div className="mb-4 md:mb-6 text-center md:text-left">
+          <div className="mb-3 md:mb-6 text-center md:text-left">
             <p className="text-base sm:text-lg md:text-xl font-bold text-emerald-400">{currentTestimonial.name}</p>
             <p className="text-xs sm:text-sm md:text-base text-blue-100">{currentTestimonial.role}</p>
           </div>
 
-          {/* Indicators */}
-          <div className="flex gap-1 sm:gap-2 justify-center md:justify-start">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                className={`h-1.5 sm:h-2 rounded-full transition ${
-                  index === currentIndex ? 'bg-emerald-400 w-6 sm:w-8' : 'bg-white/50 w-1.5 sm:w-2'
-                }`}
-              />
-            ))}
+          {/* Controls: prev arrow, indicators, next arrow - single row, never overlaps */}
+          <div className="flex items-center justify-center md:justify-start gap-2 sm:gap-3">
+            <button
+              onClick={goToPrevious}
+              className="flex-shrink-0 bg-white/20 hover:bg-white/40 text-white p-1 sm:p-1.5 rounded-full transition"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </button>
+
+            <div className="flex gap-1 sm:gap-1.5">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentIndex(index)}
+                  className={`h-1.5 rounded-full transition ${
+                    index === currentIndex ? 'bg-emerald-400 w-5 sm:w-6' : 'bg-white/50 w-1.5'
+                  }`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={goToNext}
+              className="flex-shrink-0 bg-white/20 hover:bg-white/40 text-white p-1 sm:p-1.5 rounded-full transition"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </button>
           </div>
         </div>
       </div>
-
-      {/* Navigation Arrows */}
-      <button
-        onClick={goToPrevious}
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white p-1.5 sm:p-2 rounded-full transition"
-      >
-        <ChevronLeft className="w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6" />
-      </button>
-
-      <button
-        onClick={goToNext}
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/50 text-white p-1.5 sm:p-2 rounded-full transition"
-      >
-        <ChevronRight className="w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6" />
-      </button>
     </div>
   )
 }

@@ -46,7 +46,7 @@ export function HeroBanner({ items, autoScrollInterval = 5000 }: HeroBannerProps
 
   return (
     <div
-      className="relative w-full h-96 md:h-96 sm:h-auto rounded-3xl overflow-hidden"
+      className="relative w-full h-auto md:h-96 rounded-3xl overflow-hidden"
       onMouseEnter={() => setIsAutoScrolling(false)}
       onMouseLeave={() => setIsAutoScrolling(true)}
     >
@@ -93,10 +93,10 @@ export function HeroBanner({ items, autoScrollInterval = 5000 }: HeroBannerProps
 
         {/* Right side - Content */}
         <div className="w-full md:w-1/2 bg-gradient-to-r from-blue-50 to-blue-100 flex flex-col justify-center px-4 sm:px-6 md:px-8 py-6 md:py-0 rounded-b-3xl md:rounded-b-none md:rounded-r-3xl">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-900 mb-1">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-blue-900 mb-1 break-words">
             {currentItem.title}
           </h2>
-          <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-yellow-500 mb-4 md:mb-6">
+          <h3 className="text-xl sm:text-2xl md:text-4xl font-bold text-yellow-500 mb-4 md:mb-6 break-words">
             {currentItem.subtitle}
           </h3>
           <p className="text-blue-800 mb-4 md:mb-6 text-xs sm:text-sm md:text-sm leading-relaxed">

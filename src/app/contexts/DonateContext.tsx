@@ -21,6 +21,7 @@ export function DonateProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useDonateModal() {
   const context = useContext(DonateContext)
   if (!context) {

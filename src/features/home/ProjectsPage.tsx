@@ -5,8 +5,11 @@ import { ProjectCard } from '../../components/ui/ProjectCard'
 import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
 import { useIsAdmin } from '../../hooks/useIsAdmin'
 import { useToast } from '../../components/ui/Toast'
+import { useSeo } from '../../hooks/useSeo'
 
 export function ProjectsPage() {
+  useSeo('Events | Nayi Disha Future Foundation', 'Browse current and completed community events run by Nayi Disha Future Foundation.')
+
   const isAdmin = useIsAdmin()
   const queryClient = useQueryClient()
   const { error: showError } = useToast()
@@ -37,12 +40,12 @@ export function ProjectsPage() {
   return (
     <section className="space-y-8 pb-8 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl w-full">
-        <SectionHeading title="Projects" description="Browse our current and completed community projects." />
+        <SectionHeading title="Events" description="Browse our current and completed community events." />
 
-        {isLoading && <p className="mt-8 text-sm text-slate-500">Loading projects...</p>}
-        {isError && <p className="mt-8 text-sm text-red-600">Failed to load projects.</p>}
+        {isLoading && <p className="mt-8 text-sm text-slate-500">Loading events...</p>}
+        {isError && <p className="mt-8 text-sm text-red-600">Failed to load events.</p>}
         {!isLoading && !isError && projects.length === 0 && (
-          <p className="mt-8 text-sm text-slate-500">No projects have been added yet.</p>
+          <p className="mt-8 text-sm text-slate-500">No events have been added yet.</p>
         )}
 
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 mt-8">
@@ -52,6 +55,7 @@ export function ProjectsPage() {
               title={project.title}
               description={project.description || ''}
               image={project.type === 'image' ? getStorageUrl('images', project.file_path) : undefined}
+              date={project.uploaded_at}
               onDelete={isAdmin ? () => handleDelete(project.id, project.file_path, project.title, project.type) : undefined}
               deleting={deletingId === project.id}
             />

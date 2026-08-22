@@ -1,6 +1,9 @@
 import { SectionHeading } from '../../components/ui/SectionHeading'
+import { useSeo } from '../../hooks/useSeo'
 
 export function AboutPage() {
+  useSeo('About Us | Nayi Disha Future Foundation', 'Learn how Nayi Disha Future Foundation creates sustainable change through education, health, and community empowerment programs.')
+
   return (
     <section className="space-y-12 pb-8">
       <SectionHeading title="About Us" description="Learn how Nayi Disha Future Foundation creates sustainable change." />

@@ -1,5 +1,6 @@
 import { SectionHeading } from '../../components/ui/SectionHeading'
 import { ProgramCard } from '../../components/ui/ProgramCard'
+import { useSeo } from '../../hooks/useSeo'
 
 const programs = [
   { title: 'Education Programs', description: 'Learning centers, reading clubs, digital lessons, and scholarships.', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqrnyd-ScTiABKinfcI1cb6wryTa7KXvh0Fs053DYJMg&s=800' },
@@ -9,6 +10,8 @@ const programs = [
 ]
 
 export function ProgramsPage() {
+  useSeo('Our Programs | Nayi Disha Future Foundation', 'Explore the education, health, women empowerment, and sustainability programs run by Nayi Disha Future Foundation.')
+
   return (
     <section className="space-y-8 pb-8 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl w-full">

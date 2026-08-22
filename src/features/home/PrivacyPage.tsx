@@ -1,6 +1,9 @@
 import { SectionHeading } from '../../components/ui/SectionHeading'
+import { useSeo } from '../../hooks/useSeo'
 
 export function PrivacyPage() {
+  useSeo('Privacy Policy | Nayi Disha Future Foundation', 'Read the Nayi Disha Future Foundation privacy policy on how we handle information and media data.')
+
   return (
     <section className="space-y-8 pb-8">
       <SectionHeading title="Privacy Policy" description="Understand how we handle information and media data." />

@@ -19,7 +19,7 @@ export function SampleStats() {
             transition={{ delay: idx * 0.1, duration: 0.5 }}
             className="text-center"
           >
-            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-teal-300">{stat.value}</p>
+            <p className="text-xl sm:text-2xl md:text-3xl font-bold text-teal-300">{stat.value}</p>
             <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-purple-100 leading-tight">{stat.label}</p>
           </motion.div>
         ))}

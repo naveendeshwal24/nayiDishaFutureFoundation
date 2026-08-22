@@ -135,9 +135,21 @@ export async function printAuthReport() {
   console.log('═══════════════════════════════════════\n')
 }
 
-// Expose debug utilities to window for testing
-if (typeof window !== 'undefined') {
-  ;(window as any).authDebug = {
+// Expose debug utilities to window for testing (dev builds only - never ship to production)
+declare global {
+  interface Window {
+    authDebug?: {
+      checkAuthStatus: typeof checkAuthStatus
+      verifyToken: typeof verifyToken
+      clearAuth: typeof clearAuth
+      testAdminAccess: typeof testAdminAccess
+      printAuthReport: typeof printAuthReport
+    }
+  }
+}
+
+if (import.meta.env.DEV && typeof window !== 'undefined') {
+  window.authDebug = {
     checkAuthStatus,
     verifyToken,
     clearAuth,

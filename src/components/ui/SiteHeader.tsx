@@ -9,8 +9,9 @@ const links = [
   { label: 'Home', path: AppRoutes.home },
   { label: 'About Us', path: AppRoutes.about },
   { label: 'Programs', path: AppRoutes.programs },
-  { label: 'Projects', path: AppRoutes.projects },
+  { label: 'Events', path: AppRoutes.projects },
   { label: 'Gallery', path: AppRoutes.gallery },
+  { label: 'Trust Members', path: AppRoutes.trustMembers },
   { label: 'Contact Us', path: AppRoutes.contact },
 ]
 
@@ -20,24 +21,6 @@ const socialLinks = [
   { icon: 'youtube', label: 'YouTube', url: '#' },
   { icon: 'linkedin', label: 'LinkedIn', url: '#' },
   { icon: 'twitter', label: 'Twitter', url: '#' },
-]
-
-const countries = [
-  'India',
-  'U.K',
-  'U.S.A',
-  'Canada',
-  'Singapore',
-  'Andhra Pradesh',
-  'Assam',
-  'Chhattisgarh',
-  'Gujarat',
-  'Karnataka',
-  'Odisha',
-  'Rajasthan',
-  'Tamilnadu',
-  'Telangana',
-  'Uttar Pradesh',
 ]
 
 function getSocialIcon(icon: string) {
@@ -72,8 +55,6 @@ function getSocialIcon(icon: string) {
 }
 
 export function SiteHeader() {
-  const [selectedCountry, setSelectedCountry] = useState('India')
-  const [isCountryOpen, setIsCountryOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { openDonateModal } = useDonateModal()
   const navigate = useNavigate()
@@ -84,38 +65,9 @@ export function SiteHeader() {
       <div className="hidden md:block bg-gray-50 border-b border-gray-200 px-4 py-2 sm:px-6 lg:px-8 text-xs text-gray-600">
         <div className="mx-auto max-w-7xl flex justify-between items-center flex-wrap gap-2">
           <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
-            <span className="whitespace-nowrap">📍 Tender Notice</span>
-            <span className="hidden sm:inline whitespace-nowrap">✉️ info@example.org</span>
-            <span className="hidden sm:inline whitespace-nowrap">📞 +91-XXX-XXX-XXXX</span>
-          </div>
-          <div className="relative">
-            <button
-              onClick={() => setIsCountryOpen(!isCountryOpen)}
-              className="flex items-center gap-2 px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-gray-700 text-sm whitespace-nowrap"
-            >
-              {selectedCountry}
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-              </svg>
-            </button>
-            {isCountryOpen && (
-              <div className="absolute right-0 mt-1 w-48 bg-white border border-gray-300 rounded shadow-lg max-h-64 overflow-y-auto z-50">
-                {countries.map((country) => (
-                  <button
-                    key={country}
-                    onClick={() => {
-                      setSelectedCountry(country)
-                      setIsCountryOpen(false)
-                    }}
-                    className={`w-full text-left px-4 py-2 hover:bg-blue-50 text-sm ${
-                      selectedCountry === country ? 'bg-blue-100 text-blue-900 font-semibold' : 'text-gray-700'
-                    }`}
-                  >
-                    {country}
-                  </button>
-                ))}
-              </div>
-            )}
+            <span className="whitespace-nowrap">📍 Latest Updates</span>
+            {/* <span className="hidden sm:inline whitespace-nowrap">✉️ info@example.org</span>
+            <span className="hidden sm:inline whitespace-nowrap">📞 +91-XXX-XXX-XXXX</span> */}
           </div>
         </div>
       </div>
@@ -125,8 +77,6 @@ export function SiteHeader() {
         {/* Logo Section */}
         <NavLink to={AppRoutes.home} className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
           <Logo />
-          <span className="hidden sm:block text-xs font-semibold text-gray-700 uppercase tracking-widest leading-tight">NAYI DISHA<br />FUTURE FOUNDATION</span>
-          <span className="block sm:hidden text-xs font-semibold text-gray-700 uppercase tracking-widest">ND</span>
         </NavLink>
 
         {/* Mobile Menu Button */}
@@ -243,7 +193,8 @@ export function SiteHeader() {
                 </a>
               ))}
             </div>
-            <p className="text-xs text-gray-600 mb-2">📍 Tender Notice | ✉️ info@example.org | 📞 +91-XXX-XXX-XXXX</p>
+            <p className="text-xs text-gray-600 mb-2">📍 Latest Updates</p>
+            {/* <p className="text-xs text-gray-600 mb-2">✉️ info@example.org | 📞 +91-XXX-XXX-XXXX</p> */}
           </div>
         </div>
       )}

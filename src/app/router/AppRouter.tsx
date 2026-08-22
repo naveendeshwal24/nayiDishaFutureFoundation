@@ -11,9 +11,11 @@ import { GalleryPage } from '../../features/home/GalleryPage'
 import { VideosPage } from '../../features/home/VideosPage'
 import { EventsPage } from '../../features/home/EventsPage'
 import { StoriesPage } from '../../features/home/StoriesPage'
+import { TrustMembersPage } from '../../features/home/TrustMembersPage'
 import { ContactPage } from '../../features/home/ContactPage'
 import { PrivacyPage } from '../../features/home/PrivacyPage'
 import { TermsPage } from '../../features/home/TermsPage'
+import { ComingSoonPage } from '../../features/home/ComingSoonPage'
 import { AdminLoginPage } from '../../features/admin/AdminLoginPage'
 import { AdminDashboardPage } from '../../features/admin/AdminDashboardPage'
 import { NotFoundPage } from '../../features/home/NotFoundPage'
@@ -32,9 +34,11 @@ const router = createBrowserRouter([
       { path: AppRoutes.videos, element: <VideosPage /> },
       { path: AppRoutes.events, element: <EventsPage /> },
       { path: AppRoutes.stories, element: <StoriesPage /> },
+      { path: AppRoutes.trustMembers, element: <TrustMembersPage /> },
       { path: AppRoutes.contact, element: <ContactPage /> },
       { path: AppRoutes.privacy, element: <PrivacyPage /> },
       { path: AppRoutes.terms, element: <TermsPage /> },
+      { path: AppRoutes.comingSoon, element: <ComingSoonPage /> },
       { path: AppRoutes.login, element: <AdminLoginPage /> },
       {
         path: AppRoutes.admin,

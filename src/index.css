@@ -81,13 +81,12 @@ input, textarea, select {
 }
 
 /* Touch device optimizations for mobile */
+/* Opt-in only: apply .touch-target to primary tap targets (nav links, CTAs).
+   Do NOT apply globally to all buttons/links - it breaks small controls
+   like carousel dots/arrows, causing them to overlap. */
 @media (hover: none) and (pointer: coarse) {
-  button, a {
-    @apply min-h-[44px] min-w-[44px];
-  }
-
   .touch-target {
-    @apply min-h-[48px] min-w-[48px];
+    @apply min-h-[44px] min-w-[44px];
   }
 }
 
@@ -131,4 +130,32 @@ input, textarea, select {
   .grid-responsive {
     @apply grid-cols-3;
   }
+}
+
+/* Butterfly flight animation for the 404 page */
+@keyframes butterfly-fly {
+  0% {
+    transform: translate(-10vw, 35vh) rotate(-8deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  50% {
+    transform: translate(50vw, 5vh) rotate(6deg);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(110vw, 30vh) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+.butterfly-flight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  animation: butterfly-fly 4s ease-in-out;
 }

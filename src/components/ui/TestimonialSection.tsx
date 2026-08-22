@@ -1,41 +1,29 @@
 import { SectionHeading } from './SectionHeading'
 import { TestimonialCarousel } from './TestimonialCarousel'
+import presidentImage from '../../assets/images/president.jpeg'
+import subPresidentImage from '../../assets/images/sub-president.jpeg'
 
 const testimonials = [
   {
     id: '1',
-    name: 'Indian PM',
-    role: 'Prime Minister',
-    text: 'The programs have transformed how we provide support to underprivileged communities. It was wonderful to see the structural approach to community impact.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Narendra_Modi_official_portrait.jpg/440px-Narendra_Modi_official_portrait.jpg',
+    name: 'President, Name',
+    role: 'President, Nayi Disha Future Foundation',
+    text: 'When we started Nayi Disha Future Foundation, our goal was simple: no child in a slum settlement should be denied an education because of where they were born. Today we run learning centers, health camps, and meal programs across dozens of communities, and every year we see more of our students finish school and take on jobs that once felt out of reach for their families.',
+    image: presidentImage,
   },
   {
     id: '2',
-    name: 'Indian President',
-    role: 'President of India',
-    text: 'Finally, a platform that connects storytelling with real impact. The transparency and accountability measures in social work are commendable.',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Droupadi_Murmu_official_portrait_2024.jpg/440px-Droupadi_Murmu_official_portrait_2024.jpg',
-  },
-  {
-    id: '3',
-    name: 'Educator Leader',
-    role: 'Education Coordinator',
-    text: 'Working with such initiatives has shown me the power of organized community action. Every effort creates measurable change in childrens lives.',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqrnyd-ScTiABKinfcI1cb6wryTa7KXvh0Fs053DYJMg&s=800',
-  },
-  {
-    id: '4',
-    name: 'Community Member',
-    role: 'Social Worker',
-    text: 'The data-driven approach and community-centered design set new standards for NGO operations. Truly inspiring work for underprivileged societies.',
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJV7-7UrtOo12CFmzPYRnjSA8NQ1TduY7S-u_rfQXzmg&s=800',
+    name: 'Vice President, Name',
+    role: 'Vice President, Nayi Disha Future Foundation',
+    text: 'My role keeps me on the ground, in the slums and government schools where our volunteers work every day. I have watched children arrive hungry and unable to read simple words, and later seen the same children come first in their class, well-fed, healthy, and confident about their future. That transformation is why this work matters.',
+    image: subPresidentImage,
   },
 ]
 
 export function TestimonialSection() {
   return (
     <section className="space-y-8">
-      <SectionHeading title="Voices from Our Community" description="Hear from the people our work impacts every day." />
+      <SectionHeading title="Head Members Voice" />
       <TestimonialCarousel testimonials={testimonials} autoScrollInterval={6000} />
     </section>
   )

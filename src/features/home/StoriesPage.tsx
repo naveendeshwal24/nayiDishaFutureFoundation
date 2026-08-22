@@ -1,8 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { SectionHeading } from '../../components/ui/SectionHeading'
 import { getMediaItems } from '../../services/supabase/storage'
+import { useSeo } from '../../hooks/useSeo'
 
 export function StoriesPage() {
+  useSeo('Success Stories | Nayi Disha Future Foundation', 'Read real impact stories from the communities Nayi Disha Future Foundation serves.')
+
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'stories'],
     queryFn: () => getMediaItems(),

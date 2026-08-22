@@ -8,11 +8,12 @@ interface Toast {
   type: ToastType
 }
 
-const toastStore: { listeners: Set<Function>; toasts: Toast[] } = {
+const toastStore: { listeners: Set<() => void>; toasts: Toast[] } = {
   listeners: new Set(),
   toasts: [],
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useToast() {
   const [toasts, setToasts] = useState<Toast[]>([])
 

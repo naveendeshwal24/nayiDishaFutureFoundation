@@ -59,9 +59,9 @@ export function AdminLoginPage() {
   }
 
   return (
-    <section className="mx-auto max-w-md space-y-8 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 p-8 shadow-lg ring-1 ring-slate-200">
+    <section className="mx-auto max-w-md space-y-6 sm:space-y-8 rounded-2xl bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-6 sm:p-8 shadow-lg ring-1 ring-slate-200">
       <div className="space-y-3 text-center">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
           {isSignUp ? 'Create Admin Account' : 'Admin Login'}
         </h1>
         <p className="text-sm text-slate-600">

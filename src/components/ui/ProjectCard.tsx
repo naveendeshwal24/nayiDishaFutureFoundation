@@ -1,12 +1,15 @@
+import { formatDate } from '../../utils/date'
+
 interface ProjectCardProps {
   title: string
   description: string
   image?: string
+  date?: string
   onDelete?: () => void
   deleting?: boolean
 }
 
-export function ProjectCard({ title, description, image, onDelete, deleting }: ProjectCardProps) {
+export function ProjectCard({ title, description, image, date, onDelete, deleting }: ProjectCardProps) {
   return (
     <article className="relative rounded-3xl bg-gradient-to-br from-orange-50 to-orange-100 ring-1 ring-orange-200 transition hover:shadow-lg hover:ring-orange-300 overflow-hidden">
       {onDelete && (
@@ -21,7 +24,7 @@ export function ProjectCard({ title, description, image, onDelete, deleting }: P
         </button>
       )}
       {image && (
-        <div className="h-40 w-full overflow-hidden bg-orange-200">
+        <div className="h-32 sm:h-40 md:h-48 w-full overflow-hidden bg-orange-200">
           <img
             src={image}
             alt={title}
@@ -35,6 +38,17 @@ export function ProjectCard({ title, description, image, onDelete, deleting }: P
       <div className="p-6">
         <h3 className="font-semibold text-orange-900">{title}</h3>
         <p className="mt-2 text-sm text-orange-700">{description}</p>
+        {date && <p className="mt-2 text-xs text-orange-500">{formatDate(date)}</p>}
+        {image && (
+          <a
+            href={image}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-block text-sm font-medium text-orange-600 hover:text-orange-800 hover:underline"
+          >
+            View full image
+          </a>
+        )}
       </div>
     </article>
   )

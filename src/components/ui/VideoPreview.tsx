@@ -83,8 +83,8 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
 
       {/* Video Modal */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-          <div className="w-full max-w-4xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 overflow-y-auto">
+          <div className="w-full max-w-full sm:max-w-2xl md:max-w-4xl max-h-[90vh]">
             <div className="relative w-full bg-black rounded-lg overflow-hidden" style={{ paddingBottom: '56.25%' }}>
               <video
                 src={getStorageUrl('videos', selectedVideo.file_path)}

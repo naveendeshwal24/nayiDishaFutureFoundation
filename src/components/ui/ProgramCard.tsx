@@ -8,7 +8,7 @@ export function ProgramCard({ title, description, image }: ProgramCardProps) {
   return (
     <article className="rounded-3xl bg-gradient-to-br from-purple-50 to-purple-100 ring-1 ring-purple-200 transition hover:shadow-lg hover:ring-purple-300 overflow-hidden">
       {image && (
-        <div className="h-40 w-full overflow-hidden bg-purple-200">
+        <div className="h-32 sm:h-40 md:h-48 w-full overflow-hidden bg-purple-200">
           <img
             src={image}
             alt={title}
