@@ -28,22 +28,31 @@ export function GalleryPreview({ showAll }: GalleryPreviewProps) {
         {images.map((image) => (
           <article key={image.id} className="group relative overflow-hidden rounded-2xl bg-slate-900">
             {image.type === 'video' ? (
-              <video
-                src={getStorageUrl('videos', image.file_path)}
-                controls
-                className="h-40 sm:h-48 md:h-56 lg:h-64 w-full object-cover"
-              />
+              <>
+                <video
+                  src={getStorageUrl('videos', image.file_path)}
+                  controls
+                  preload="metadata"
+                  className="block h-40 sm:h-48 md:h-56 lg:h-64 w-full object-cover"
+                />
+                <div className="px-3 py-2 sm:px-4">
+                  <p className="truncate text-xs font-medium text-white sm:text-sm">{image.title}</p>
+                  {image.category?.name && <p className="text-xs text-slate-300">{image.category.name}</p>}
+                </div>
+              </>
             ) : (
-              <img
-                src={getStorageUrl('images', image.file_path)}
-                alt={image.title}
-                className="h-40 sm:h-48 md:h-56 lg:h-64 w-full object-cover transition group-hover:scale-110"
-              />
+              <>
+                <img
+                  src={getStorageUrl('images', image.file_path)}
+                  alt={image.title}
+                  className="h-40 sm:h-48 md:h-56 lg:h-64 w-full object-cover transition group-hover:scale-110"
+                />
+                <div className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent p-3 opacity-0 transition group-hover:opacity-100 sm:p-4">
+                  <p className="truncate text-xs font-medium text-white sm:text-sm">{image.title}</p>
+                  <p className="text-xs text-slate-300">{image.category?.name}</p>
+                </div>
+              </>
             )}
-            <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4 opacity-0 transition group-hover:opacity-100">
-              <p className="text-xs sm:text-sm font-medium text-white truncate">{image.title}</p>
-              <p className="text-xs text-slate-300">{image.category?.name}</p>
-            </div>
           </article>
         ))}
       </div>
