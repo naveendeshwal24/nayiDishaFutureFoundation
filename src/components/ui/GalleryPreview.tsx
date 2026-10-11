@@ -1,56 +1,18 @@
-import { useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { SectionHeading } from './SectionHeading'
-import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
-import { useIsAdmin } from '../../hooks/useIsAdmin'
-import { useToast } from './Toast'
-import { ConfirmModal } from './ConfirmModal'
-
-interface PendingDelete {
-  id: string
-  filePath: string
-  title: string
-}
+import { getMediaItems, getStorageUrl } from '../../services/supabase/storage'
 
 interface GalleryPreviewProps {
   showAll?: boolean
 }
 
 export function GalleryPreview({ showAll }: GalleryPreviewProps) {
-  const isAdmin = useIsAdmin()
-  const queryClient = useQueryClient()
-  const { error: showError } = useToast()
-  const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null)
-
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'gallery'],
     queryFn: () => getMediaItems(),
   })
 
   const images = showAll ? items : items.slice(0, 3)
-
-  const handleDelete = (id: string, filePath: string, title: string) => {
-    setPendingDelete({ id, filePath, title })
-  }
-
-  const confirmDelete = async () => {
-    if (!pendingDelete) return
-
-    const { id, filePath } = pendingDelete
-    setDeletingId(id)
-    try {
-      const item = items.find((candidate) => candidate.id === id)
-      await deleteFile(item?.type === 'video' ? 'videos' : 'images', filePath)
-      await deleteMediaItem(id)
-      await queryClient.invalidateQueries({ queryKey: ['media'] })
-    } catch (err) {
-      showError(`Failed to remove: ${err instanceof Error ? err.message : 'Unknown error'}`)
-    } finally {
-      setDeletingId(null)
-      setPendingDelete(null)
-    }
-  }
 
   return (
     <section className="space-y-6 sm:space-y-8">
@@ -82,30 +44,9 @@ export function GalleryPreview({ showAll }: GalleryPreviewProps) {
               <p className="text-xs sm:text-sm font-medium text-white truncate">{image.title}</p>
               <p className="text-xs text-slate-300">{image.category?.name}</p>
             </div>
-            {isAdmin && (
-              <button
-                type="button"
-                onClick={() => handleDelete(image.id, image.file_path, image.title)}
-                disabled={deletingId === image.id}
-                aria-label={`Remove ${image.title}`}
-                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-600 text-xs font-bold text-white shadow-md transition hover:bg-red-700 disabled:opacity-50"
-              >
-                ✕
-              </button>
-            )}
           </article>
         ))}
       </div>
-
-      <ConfirmModal
-        isOpen={pendingDelete !== null}
-        title="Remove media?"
-        message={pendingDelete ? `Remove "${pendingDelete.title}" from the gallery? This action cannot be undone.` : ''}
-        confirmLabel="Remove"
-        isLoading={deletingId !== null}
-        onConfirm={confirmDelete}
-        onCancel={() => setPendingDelete(null)}
-      />
     </section>
   )
 }

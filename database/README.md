@@ -77,7 +77,7 @@ Store all video files here.
 - ✅ **SELECT**: Public read access (anyone can view)
 - ✅ **INSERT**: Authenticated users only
 - ✅ **UPDATE**: Only by media owner
-- ✅ **DELETE**: Only by media owner
+- ✅ **DELETE**: Only by the media uploader; storage deletion is also restricted to that uploader
 
 **media_categories:**
 - ✅ **SELECT**: Public read access (anyone can view)
@@ -106,7 +106,8 @@ media_categories (1)
 - Go to Supabase Dashboard → Storage
 - Create `images` bucket (Public), 50MB file size limit
 - Create `videos` bucket (Public), 50MB file size limit
-- **Required:** Run `database/schema.sql` (step 1) *after* creating the buckets — it includes the `storage.objects` RLS policies that allow authenticated admins to upload/update/delete files. A "Public" bucket alone only grants read access; without these policies, uploads fail with "new row violates row-level security policy".
+- **Required:** Run `database/schema.sql` (step 1) *after* creating the buckets — it includes the `storage.objects` RLS policies that allow authenticated admins to upload/update files and restrict deletion to the uploader. A "Public" bucket alone only grants read access; without these policies, uploads fail with "new row violates row-level security policy".
+- **Existing installations:** Run `database/migrations/20261011_restrict_media_file_deletes.sql` in the Supabase SQL Editor to replace the broad authenticated-user storage-delete policy. This restricts deleting image and video files to the account that uploaded them. The public gallery has no delete controls; media can be managed from the admin dashboard.
 
 ### 3. Upload Media
 ```typescript

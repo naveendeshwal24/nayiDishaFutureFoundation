@@ -1,11 +1,8 @@
 import { useState } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { SectionHeading } from './SectionHeading'
-import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
-import { useIsAdmin } from '../../hooks/useIsAdmin'
-import { useToast } from './Toast'
+import { getMediaItems, getStorageUrl } from '../../services/supabase/storage'
 import type { MediaItem } from '../../types/models'
-import { ConfirmModal } from './ConfirmModal'
 
 interface VideoPreviewProps {
   showAll?: boolean
@@ -13,11 +10,6 @@ interface VideoPreviewProps {
 
 export function VideoPreview({ showAll }: VideoPreviewProps) {
   const [selectedVideo, setSelectedVideo] = useState<MediaItem | null>(null)
-  const isAdmin = useIsAdmin()
-  const queryClient = useQueryClient()
-  const { error: showError } = useToast()
-  const [deletingId, setDeletingId] = useState<string | null>(null)
-  const [pendingDelete, setPendingDelete] = useState<MediaItem | null>(null)
 
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'video'],
@@ -25,27 +17,6 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
   })
 
   const videos = showAll ? items : items.slice(0, 3)
-
-  const handleDelete = (e: React.MouseEvent, video: MediaItem) => {
-    e.stopPropagation()
-    setPendingDelete(video)
-  }
-
-  const confirmDelete = async () => {
-    if (!pendingDelete) return
-
-    setDeletingId(pendingDelete.id)
-    try {
-      await deleteFile('videos', pendingDelete.file_path)
-      await deleteMediaItem(pendingDelete.id)
-      await queryClient.invalidateQueries({ queryKey: ['media'] })
-    } catch (err) {
-      showError(`Failed to remove: ${err instanceof Error ? err.message : 'Unknown error'}`)
-    } finally {
-      setDeletingId(null)
-      setPendingDelete(null)
-    }
-  }
 
   return (
     <section className="space-y-6 sm:space-y-8">
@@ -72,18 +43,6 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
                 <p className="text-xs text-slate-300">{video.category?.name}</p>
               </div>
             </div>
-            {isAdmin && (
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={(e) => handleDelete(e, video)}
-                aria-label={`Remove ${video.title}`}
-                className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full border-2 border-white bg-red-600 text-xs font-bold text-white shadow-md transition hover:bg-red-700"
-                style={{ opacity: deletingId === video.id ? 0.5 : 1, pointerEvents: deletingId === video.id ? 'none' : 'auto' }}
-              >
-                ✕
-              </span>
-            )}
           </button>
         ))}
       </div>
@@ -113,15 +72,6 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
         </div>
       )}
 
-      <ConfirmModal
-        isOpen={pendingDelete !== null}
-        title="Remove video?"
-        message={pendingDelete ? `Remove "${pendingDelete.title}" from the gallery? This action cannot be undone.` : ''}
-        confirmLabel="Remove"
-        isLoading={deletingId !== null}
-        onConfirm={confirmDelete}
-        onCancel={() => setPendingDelete(null)}
-      />
     </section>
   )
 }
