@@ -176,8 +176,8 @@ const featureCardsData = [
 
 export function HomePage() {
   useSeo(
-    'Nayi Disha Future Foundation - NGO for Education, Health & Community Empowerment',
-    'Nayi Disha Future Foundation is an NGO committed to education, health, empowerment, and environmental conservation. Join us in creating positive change for communities in need.'
+    'Nai Disha Future Foundation - NGO for Education, Health & Community Empowerment',
+    'Nai Disha Future Foundation is an NGO committed to education, health, empowerment, and environmental conservation. Join us in creating positive change for communities in need.'
   )
 
   return (
@@ -190,7 +190,7 @@ export function HomePage() {
           <section className="rounded-3xl bg-white p-6 sm:p-8 shadow-sm ring-1 ring-purple-100">
             <SectionHeading title="Mission" description="Our mission is to enable communities to thrive with education, health, and sustainable livelihoods." />
             <p className="mt-4 text-sm sm:text-base text-slate-600 leading-relaxed">
-              Nayi Disha Future Foundation partners with government schools, primary health centers, and village councils to close the gaps that keep
+              Nai Disha Future Foundation partners with government schools, primary health centers, and village councils to close the gaps that keep
               families trapped in poverty. We support local leaders, build trusted programs, and share impact stories while preserving
               dignity and sustainability at every step.
             </p>

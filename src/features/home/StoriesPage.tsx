@@ -4,7 +4,7 @@ import { getMediaItems } from '../../services/supabase/storage'
 import { useSeo } from '../../hooks/useSeo'
 
 export function StoriesPage() {
-  useSeo('Success Stories | Nayi Disha Future Foundation', 'Read real impact stories from the communities Nayi Disha Future Foundation serves.')
+  useSeo('Success Stories | Nai Disha Future Foundation', 'Read real impact stories from the communities Nai Disha Future Foundation serves.')
 
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'stories'],

@@ -2,17 +2,17 @@ import { SectionHeading } from '../../components/ui/SectionHeading'
 import { useSeo } from '../../hooks/useSeo'
 
 export function AboutPage() {
-  useSeo('About Us | Nayi Disha Future Foundation', 'Learn how Nayi Disha Future Foundation creates sustainable change through education, health, and community empowerment programs.')
+  useSeo('About Us | Nai Disha Future Foundation', 'Learn how Nai Disha Future Foundation creates sustainable change through education, health, and community empowerment programs.')
 
   return (
     <section className="space-y-12 pb-8">
-      <SectionHeading title="About Us" description="Learn how Nayi Disha Future Foundation creates sustainable change." />
+      <SectionHeading title="About Us" description="Learn how Nai Disha Future Foundation creates sustainable change." />
       
       {/* Mission and Values */}
       <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
         <div className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
           <p className="text-slate-600">
-            Nayi Disha Future Foundation is an NGO platform built for long-term community impact. We design programs in education, health, women's empowerment, and environment while building trustworthy digital systems for storytelling and operations.
+            Nai Disha Future Foundation is an NGO platform built for long-term community impact. We design programs in education, health, women's empowerment, and environment while building trustworthy digital systems for storytelling and operations.
           </p>
           <p className="mt-4 text-slate-600">
             Our work is guided by accountability, transparency, and a data-informed approach that ensures every project supports people, protects resources, and inspires participation.

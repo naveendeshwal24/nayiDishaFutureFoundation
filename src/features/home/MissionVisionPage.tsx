@@ -2,7 +2,7 @@ import { SectionHeading } from '../../components/ui/SectionHeading'
 import { useSeo } from '../../hooks/useSeo'
 
 export function MissionVisionPage() {
-  useSeo('Mission & Vision | Nayi Disha Future Foundation', 'Discover the long-term mission and vision guiding every Nayi Disha Future Foundation initiative.')
+  useSeo('Mission & Vision | Nai Disha Future Foundation', 'Discover the long-term mission and vision guiding every Nai Disha Future Foundation initiative.')
 
   return (
     <section className="space-y-10 pb-8">
@@ -11,7 +11,7 @@ export function MissionVisionPage() {
         <article className="rounded-3xl bg-white p-8 shadow-sm ring-1 ring-slate-200">
           <h2 className="text-xl font-semibold text-slate-900">Mission</h2>
           <p className="mt-4 text-slate-600">
-            Nayi Disha Future Foundation exists to empower underserved communities through education, healthcare, and sustainable livelihoods. We
+            Nai Disha Future Foundation exists to empower underserved communities through education, healthcare, and sustainable livelihoods. We
             partner with government schools, primary health centers, and village councils to design programs that address root causes of
             poverty rather than offer short-term relief.
           </p>

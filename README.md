@@ -1,4 +1,4 @@
-# Nayi Disha Future Foundation – NGO Management Website
+# Nai Disha Future Foundation – NGO Management Website
 
 A **lightweight**, **production-ready** NGO management platform built with **React 19**, **TypeScript**, **Vite**, **Tailwind CSS**, and **Supabase**.
 

@@ -5,6 +5,7 @@ import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../..
 import { useIsAdmin } from '../../hooks/useIsAdmin'
 import { useToast } from './Toast'
 import type { MediaItem } from '../../types/models'
+import { ConfirmModal } from './ConfirmModal'
 
 interface VideoPreviewProps {
   showAll?: boolean
@@ -16,6 +17,7 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
   const queryClient = useQueryClient()
   const { error: showError } = useToast()
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<MediaItem | null>(null)
 
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'video'],
@@ -24,19 +26,24 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
 
   const videos = showAll ? items : items.slice(0, 3)
 
-  const handleDelete = async (e: React.MouseEvent, video: MediaItem) => {
+  const handleDelete = (e: React.MouseEvent, video: MediaItem) => {
     e.stopPropagation()
-    if (!confirm(`Remove "${video.title}"?`)) return
+    setPendingDelete(video)
+  }
 
-    setDeletingId(video.id)
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+
+    setDeletingId(pendingDelete.id)
     try {
-      await deleteFile('videos', video.file_path)
-      await deleteMediaItem(video.id)
+      await deleteFile('videos', pendingDelete.file_path)
+      await deleteMediaItem(pendingDelete.id)
       await queryClient.invalidateQueries({ queryKey: ['media'] })
     } catch (err) {
       showError(`Failed to remove: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setDeletingId(null)
+      setPendingDelete(null)
     }
   }
 
@@ -105,6 +112,16 @@ export function VideoPreview({ showAll }: VideoPreviewProps) {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={pendingDelete !== null}
+        title="Remove video?"
+        message={pendingDelete ? `Remove "${pendingDelete.title}" from the gallery? This action cannot be undone.` : ''}
+        confirmLabel="Remove"
+        isLoading={deletingId !== null}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </section>
   )
 }

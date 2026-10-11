@@ -1,7 +1,7 @@
-# Deployment Guide - Nayi Disha Foundation
+# Deployment Guide - Nai Disha Foundation
 
 ## Overview
-This guide walks through deploying the Nayi Disha Foundation website to Vercel with proper security practices.
+This guide walks through deploying the Nai Disha Foundation website to Vercel with proper security practices.
 
 ---
 

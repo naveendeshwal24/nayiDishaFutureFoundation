@@ -4,6 +4,13 @@ import { SectionHeading } from './SectionHeading'
 import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
 import { useIsAdmin } from '../../hooks/useIsAdmin'
 import { useToast } from './Toast'
+import { ConfirmModal } from './ConfirmModal'
+
+interface PendingDelete {
+  id: string
+  filePath: string
+  title: string
+}
 
 interface GalleryPreviewProps {
   showAll?: boolean
@@ -14,26 +21,34 @@ export function GalleryPreview({ showAll }: GalleryPreviewProps) {
   const queryClient = useQueryClient()
   const { error: showError } = useToast()
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null)
 
   const { data: items = [], isLoading, isError } = useQuery({
-    queryKey: ['media', 'image'],
-    queryFn: () => getMediaItems({ type: 'image' }),
+    queryKey: ['media', 'gallery'],
+    queryFn: () => getMediaItems(),
   })
 
   const images = showAll ? items : items.slice(0, 3)
 
-  const handleDelete = async (id: string, filePath: string, title: string) => {
-    if (!confirm(`Remove "${title}"?`)) return
+  const handleDelete = (id: string, filePath: string, title: string) => {
+    setPendingDelete({ id, filePath, title })
+  }
 
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+
+    const { id, filePath } = pendingDelete
     setDeletingId(id)
     try {
-      await deleteFile('images', filePath)
+      const item = items.find((candidate) => candidate.id === id)
+      await deleteFile(item?.type === 'video' ? 'videos' : 'images', filePath)
       await deleteMediaItem(id)
       await queryClient.invalidateQueries({ queryKey: ['media'] })
     } catch (err) {
       showError(`Failed to remove: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setDeletingId(null)
+      setPendingDelete(null)
     }
   }
 
@@ -50,11 +65,19 @@ export function GalleryPreview({ showAll }: GalleryPreviewProps) {
       <div className={`grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 ${showAll ? 'md:grid-cols-3 lg:grid-cols-4' : 'md:grid-cols-3'}`}>
         {images.map((image) => (
           <article key={image.id} className="group relative overflow-hidden rounded-2xl bg-slate-900">
-            <img
-              src={getStorageUrl('images', image.file_path)}
-              alt={image.title}
-              className="h-40 sm:h-48 md:h-56 lg:h-64 w-full object-cover transition group-hover:scale-110"
-            />
+            {image.type === 'video' ? (
+              <video
+                src={getStorageUrl('videos', image.file_path)}
+                controls
+                className="h-40 sm:h-48 md:h-56 lg:h-64 w-full object-cover"
+              />
+            ) : (
+              <img
+                src={getStorageUrl('images', image.file_path)}
+                alt={image.title}
+                className="h-40 sm:h-48 md:h-56 lg:h-64 w-full object-cover transition group-hover:scale-110"
+              />
+            )}
             <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4 opacity-0 transition group-hover:opacity-100">
               <p className="text-xs sm:text-sm font-medium text-white truncate">{image.title}</p>
               <p className="text-xs text-slate-300">{image.category?.name}</p>
@@ -73,6 +96,16 @@ export function GalleryPreview({ showAll }: GalleryPreviewProps) {
           </article>
         ))}
       </div>
+
+      <ConfirmModal
+        isOpen={pendingDelete !== null}
+        title="Remove media?"
+        message={pendingDelete ? `Remove "${pendingDelete.title}" from the gallery? This action cannot be undone.` : ''}
+        confirmLabel="Remove"
+        isLoading={deletingId !== null}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </section>
   )
 }

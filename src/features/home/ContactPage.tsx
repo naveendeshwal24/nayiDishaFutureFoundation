@@ -6,7 +6,7 @@ const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf-dummy-form-
 const MAP_EMBED_URL = 'https://www.google.com/maps?q=Kosi+Kalan,+Mathura,+281403&output=embed'
 
 export function ContactPage() {
-  useSeo('Contact Us | Nayi Disha Future Foundation', 'Contact Nayi Disha Future Foundation for partnership, volunteering, media requests, or to visit us in Kosi Kalan, Mathura.')
+  useSeo('Contact Us | Nai Disha Future Foundation', 'Contact Nai Disha Future Foundation for partnership, volunteering, media requests, or to visit us in Kosi Kalan, Mathura.')
 
   return (
     <section className="space-y-8 pb-8">
@@ -15,12 +15,12 @@ export function ContactPage() {
         <p className="text-slate-600 break-words">
           For program inquiries, media requests or volunteering, please contact us at{' '}
           <a
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=nayidishafuturefoundation@gmail.com"
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=naidishafuturefoundation@gmail.com"
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-slate-900 underline break-words"
           >
-            nayidishafuturefoundation@gmail.com
+            naidishafuturefoundation@gmail.com
           </a>
           .
         </p>
@@ -43,7 +43,7 @@ export function ContactPage() {
       {/* Location Map */}
       <div className="rounded-3xl overflow-hidden shadow-sm ring-1 ring-slate-200">
         <iframe
-          title="Nayi Disha Future Foundation location - Kosi Kalan, Mathura"
+          title="Nai Disha Future Foundation location - Kosi Kalan, Mathura"
           src={MAP_EMBED_URL}
           loading="lazy"
           referrerPolicy="no-referrer-when-downgrade"

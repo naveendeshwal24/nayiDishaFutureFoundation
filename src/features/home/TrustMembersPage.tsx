@@ -18,7 +18,7 @@ interface Member {
 }
 
 const president: Member = {
-  name: 'Narendra Kumar',
+  name: 'Narendra Pal Singh',
   designation: 'President',
   description: 'Leads the trust\u2019s overall vision, strategy, and community initiatives.',
   image: presidentImage,
@@ -38,17 +38,21 @@ const itMember: Member = {
   image: naveenImage,
 }
 
-// Row order: Mahender, Preet Panchal, Rahul Panchal / Vijay, Arjun, Prem / Omprakash, Devender, Dilip Panchal
-const trustMembers: Member[] = [
+const upperTrustMembers: Member[] = [
   { name: 'Mahender Kumar', designation: 'Trust Member', description: 'Holds all finance responsibilities, managing the trust\u2019s accounts and funds.', image: mahenderImage },
-  { name: 'Preet Panchal', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Preet Kumar Panchal', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Prem Kumar', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.', image: premImage },
   { name: 'Rahul Panchal', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
-  { name: 'Vijay', designation: 'Trust Member', description: 'Manages field operations and community engagement.', image: vijayImage },
-  { name: 'Arjun', designation: 'Trust Member', description: 'Supports administrative work and record keeping for the trust.', image: arjunImage },
-  { name: 'Prem', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.', image: premImage },
-  { name: 'Omprakash', designation: 'Trust Member', description: 'Oversees resource management and logistics for trust activities.', image: omprakashImage },
-  { name: 'Devender', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Vijay Shankar Sharma', designation: 'Trust Member', description: 'Manages field operations and community engagement.', image: vijayImage },
   { name: 'Dilip Panchal', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+]
+
+const lowerTrustMembers: Member[] = [
+  { name: 'Devender kumar', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Arjun', designation: 'Trust Member', description: 'Supports administrative work and record keeping for the trust.', image: arjunImage },
+  { name: 'Vikram Singh', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Yogesh', designation: 'Trust Member', description: 'Supports community outreach and on-ground event coordination.' },
+  { name: 'Omprakash', designation: 'Trust Member', description: 'Oversees resource management and logistics for trust activities.', image: omprakashImage },
 ]
 
 const avatarPalette = [
@@ -138,15 +142,15 @@ function MemberCard({ member, highlighted }: { member: Member; highlighted?: boo
 
 export function TrustMembersPage() {
   useSeo(
-    'Trust Members | Nayi Disha Future Foundation',
-    'Meet the President, Vice President, and Trust Members leading Nayi Disha Future Foundation.'
+    'Trust Members | Nai Disha Future Foundation',
+    'Meet the President, Vice President, and Trust Members leading Nai Disha Future Foundation.'
   )
 
   return (
     <section className="space-y-10 pb-12">
       <SectionHeading
         title="Trust Members"
-        description="Meet the people behind Nayi Disha Future Foundation and the organizational structure that guides our mission."
+        description="Meet the people behind Nai Disha Future Foundation and the organizational structure that guides our mission."
       />
 
       <div className="flex flex-col items-center gap-10 lg:flex-row lg:items-start lg:justify-center lg:gap-12">
@@ -185,7 +189,13 @@ export function TrustMembersPage() {
           </div>
 
           <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
-            {trustMembers.map((member, index) => (
+            {upperTrustMembers.map((member, index) => (
+              <MemberCard key={`${member.name}-${index}`} member={member} />
+            ))}
+          </div>
+
+          <div className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 md:gap-8">
+            {lowerTrustMembers.map((member, index) => (
               <MemberCard key={`${member.name}-${index}`} member={member} />
             ))}
           </div>

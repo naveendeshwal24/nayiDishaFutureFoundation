@@ -6,14 +6,23 @@ import { getMediaItems, getStorageUrl, deleteFile, deleteMediaItem } from '../..
 import { useIsAdmin } from '../../hooks/useIsAdmin'
 import { useToast } from '../../components/ui/Toast'
 import { useSeo } from '../../hooks/useSeo'
+import { ConfirmModal } from '../../components/ui/ConfirmModal'
+
+interface PendingDelete {
+  id: string
+  filePath: string
+  title: string
+  type: 'image' | 'video'
+}
 
 export function ProjectsPage() {
-  useSeo('Events | Nayi Disha Future Foundation', 'Browse current and completed community events run by Nayi Disha Future Foundation.')
+  useSeo('Events | Nai Disha Future Foundation', 'Browse current and completed community events run by Nai Disha Future Foundation.')
 
   const isAdmin = useIsAdmin()
   const queryClient = useQueryClient()
   const { error: showError } = useToast()
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null)
 
   const { data: items = [], isLoading, isError } = useQuery({
     queryKey: ['media', 'projects'],
@@ -22,18 +31,23 @@ export function ProjectsPage() {
 
   const projects = items.filter((item) => item.category?.name === 'Projects')
 
-  const handleDelete = async (id: string, filePath: string, title: string, type: 'image' | 'video') => {
-    if (!confirm(`Remove "${title}"?`)) return
+  const handleDelete = (id: string, filePath: string, title: string, type: 'image' | 'video') => {
+    setPendingDelete({ id, filePath, title, type })
+  }
 
-    setDeletingId(id)
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
+
+    setDeletingId(pendingDelete.id)
     try {
-      await deleteFile(type === 'image' ? 'images' : 'videos', filePath)
-      await deleteMediaItem(id)
+      await deleteFile(pendingDelete.type === 'image' ? 'images' : 'videos', pendingDelete.filePath)
+      await deleteMediaItem(pendingDelete.id)
       await queryClient.invalidateQueries({ queryKey: ['media'] })
     } catch (err) {
       showError(`Failed to remove: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setDeletingId(null)
+      setPendingDelete(null)
     }
   }
 
@@ -61,6 +75,16 @@ export function ProjectsPage() {
             />
           ))}
         </div>
+
+        <ConfirmModal
+          isOpen={pendingDelete !== null}
+          title="Remove event?"
+          message={pendingDelete ? `Remove "${pendingDelete.title}" from events? This action cannot be undone.` : ''}
+          confirmLabel="Remove"
+          isLoading={deletingId !== null}
+          onConfirm={confirmDelete}
+          onCancel={() => setPendingDelete(null)}
+        />
       </div>
     </section>
   )

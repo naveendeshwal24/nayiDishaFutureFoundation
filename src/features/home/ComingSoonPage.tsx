@@ -8,7 +8,7 @@ export function ComingSoonPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-emerald-500">Coming Soon</p>
         <h1 className="mt-4 text-3xl sm:text-4xl font-semibold text-slate-900">This page is on its way</h1>
         <p className="mt-4 text-slate-600">
-          We're working on this section of Nayi Disha Future Foundation's website. Please check back soon.
+          We're working on this section of Nai Disha Future Foundation's website. Please check back soon.
         </p>
         <Link
           to={AppRoutes.home}

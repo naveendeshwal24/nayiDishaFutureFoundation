@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useDonateModal } from '../../app/contexts/DonateContext'
 
 const UPI_ID = 'ndff-2026@ybl'
-const UPI_PAYEE_NAME = 'Nayi Disha Future Foundation'
+const UPI_PAYEE_NAME = 'Nai Disha Future Foundation'
 const UPI_LINK = `upi://pay?pa=${encodeURIComponent(UPI_ID)}&pn=${encodeURIComponent(UPI_PAYEE_NAME)}&cu=INR`
 const QR_CODE_SRC = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(UPI_LINK)}`
 
@@ -71,8 +71,7 @@ export function DonateModal() {
             <div>
               <h3 className="text-sm font-semibold text-slate-900 mb-2">Donation Consent</h3>
               <div className="text-xs text-slate-600 space-y-1">
-                <p>✓ Support Nayi Disha Future Foundation's programs and projects</p>
-                <p>✓ Tax-deductible donation</p>
+                <p>✓ Support Nai Disha Future Foundation's programs and projects</p>
                 <p>✓ Transparent & responsible use</p>
                 <p>✓ Receipt sent via email</p>
               </div>

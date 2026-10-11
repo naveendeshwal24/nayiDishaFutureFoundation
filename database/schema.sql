@@ -1,4 +1,4 @@
--- Nayi Disha Foundation - Database Schema
+-- Nai Disha Foundation - Database Schema
 -- Created: 2026-07-18
 -- Database: Supabase (ynkalunthvomjjgcbcmj)
 

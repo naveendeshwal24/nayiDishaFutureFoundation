@@ -3,6 +3,12 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import type { MediaItem } from '../../types/models'
 import { getStorageUrl, getMediaItems, deleteFile, deleteMediaItem } from '../../services/supabase/storage'
 import { useToast } from '../../components/ui/Toast'
+import { ConfirmModal } from '../../components/ui/ConfirmModal'
+
+interface PendingDelete {
+  ids: string[]
+  message: string
+}
 
 interface MediaListProps {
   type: 'image' | 'video'
@@ -18,6 +24,7 @@ export function MediaList({ type, categoryFilter, excludeCategory, label }: Medi
   const [deleting, setDeleting] = useState(false)
   const { error: showError } = useToast()
   const queryClient = useQueryClient()
+  const [pendingDelete, setPendingDelete] = useState<PendingDelete | null>(null)
 
   // Fetch media items from database
   const { data: allItems = [], isLoading, error } = useQuery({
@@ -39,31 +46,16 @@ export function MediaList({ type, categoryFilter, excludeCategory, label }: Medi
     const item = items.find((i) => i.id === id)
     if (!item) return
 
-    if (!confirm(`Delete "${item.title}"?`)) return
-
-    setDeleting(true)
-    try {
-      const bucket = item.type === 'image' ? 'images' : 'videos'
-      await deleteFile(bucket, item.file_path)
-      await deleteMediaItem(id)
-      await queryClient.invalidateQueries({ queryKey: ['media'] })
-      setSelectedIds((prev) => prev.filter((i) => i !== id))
-    } catch (err) {
-      showError(`Failed to delete: ${err instanceof Error ? err.message : 'Unknown error'}`)
-    } finally {
-      setDeleting(false)
-    }
+    setPendingDelete({ ids: [id], message: `Delete "${item.title}"? This action cannot be undone.` })
   }
 
-  const handleBulkDelete = async () => {
-    if (selectedIds.length === 0) return
-
-    if (!confirm(`Delete ${selectedIds.length} items?`)) return
+  const confirmDelete = async () => {
+    if (!pendingDelete) return
 
     setDeleting(true)
     try {
-      for (const id of selectedIds) {
-        const item = items.find((i) => i.id === id)
+      for (const id of pendingDelete.ids) {
+        const item = items.find((candidate) => candidate.id === id)
         if (item) {
           const bucket = item.type === 'image' ? 'images' : 'videos'
           await deleteFile(bucket, item.file_path)
@@ -71,12 +63,19 @@ export function MediaList({ type, categoryFilter, excludeCategory, label }: Medi
         }
       }
       await queryClient.invalidateQueries({ queryKey: ['media'] })
-      setSelectedIds([])
+      setSelectedIds((prev) => prev.filter((id) => !pendingDelete.ids.includes(id)))
     } catch (err) {
-      showError(`Bulk delete failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+      showError(`Failed to delete: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setDeleting(false)
+      setPendingDelete(null)
     }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return
+
+    setPendingDelete({ ids: selectedIds, message: `Delete ${selectedIds.length} selected items? This action cannot be undone.` })
   }
 
   const getImageUrl = (item: MediaItem) => {
@@ -164,6 +163,15 @@ export function MediaList({ type, categoryFilter, excludeCategory, label }: Medi
           ))}
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={pendingDelete !== null}
+        title="Delete media?"
+        message={pendingDelete?.message || ''}
+        isLoading={deleting}
+        onConfirm={confirmDelete}
+        onCancel={() => setPendingDelete(null)}
+      />
     </div>
   )
 }

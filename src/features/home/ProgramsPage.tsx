@@ -10,7 +10,7 @@ const programs = [
 ]
 
 export function ProgramsPage() {
-  useSeo('Our Programs | Nayi Disha Future Foundation', 'Explore the education, health, women empowerment, and sustainability programs run by Nayi Disha Future Foundation.')
+  useSeo('Our Programs | Nai Disha Future Foundation', 'Explore the education, health, women empowerment, and sustainability programs run by Nai Disha Future Foundation.')
 
   return (
     <section className="space-y-8 pb-8 px-4 sm:px-6 lg:px-8">

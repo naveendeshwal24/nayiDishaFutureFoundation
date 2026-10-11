@@ -2,7 +2,7 @@ import { SectionHeading } from '../../components/ui/SectionHeading'
 import { useSeo } from '../../hooks/useSeo'
 
 export function TermsPage() {
-  useSeo('Terms & Conditions | Nayi Disha Future Foundation', 'Terms and conditions for using the Nayi Disha Future Foundation website and its services.')
+  useSeo('Terms & Conditions | Nai Disha Future Foundation', 'Terms and conditions for using the Nai Disha Future Foundation website and its services.')
 
   return (
     <section className="space-y-8 pb-8">

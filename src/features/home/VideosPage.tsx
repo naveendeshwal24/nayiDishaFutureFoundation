@@ -3,7 +3,7 @@ import { VideoPreview } from '../../components/ui/VideoPreview'
 import { useSeo } from '../../hooks/useSeo'
 
 export function VideosPage() {
-  useSeo('Videos | Nayi Disha Future Foundation', 'Watch videos from Nayi Disha Future Foundation programs, impact stories, and events.')
+  useSeo('Videos | Nai Disha Future Foundation', 'Watch videos from Nai Disha Future Foundation programs, impact stories, and events.')
 
   return (
     <section className="space-y-8 pb-8">

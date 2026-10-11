@@ -17,7 +17,7 @@ export function AdminDashboardPage() {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(null)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const navigate = useNavigate()
-  const { success } = useToast()
+  const { success, error: showError } = useToast()
 
   useEffect(() => {
     const loadAdmin = async () => {
@@ -44,7 +44,7 @@ export function AdminDashboardPage() {
       }, 500)
     } catch (error) {
       console.error('Logout failed:', error)
-      alert('Failed to logout')
+      showError('Failed to logout')
       setIsLoggingOut(false)
     }
   }
@@ -92,7 +92,7 @@ export function AdminDashboardPage() {
               ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow'
               : 'text-slate-600 hover:bg-slate-50'
           }`}
-        >
+        >                    
           🏗️ Projects
         </button>
         <button

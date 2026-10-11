@@ -1,6 +1,6 @@
 # Database Schema Documentation
 
-## Project: Nayi Disha Foundation
+## Project: Nai Disha Foundation
 **Database:** Supabase  
 **Project ID:** ynkalunthvomjjgcbcmj  
 **API URL:** https://ynkalunthvomjjgcbcmj.supabase.co

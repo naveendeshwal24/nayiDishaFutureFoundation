@@ -6,14 +6,15 @@ interface ProtectedRouteProps {
   children: React.ReactNode
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
+export function ProtectedRoute({ children }: ProtectedRouteProps) { 
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
 
   useEffect(() => {
     const checkAuth = async () => {
-      try {
+      try { 
         const user = await getCurrentAdmin()
-        if (user) {
+        if (user) {  
           console.log('✓ Admin authenticated:', user.email)
           setIsAuthenticated(true)
         } else {

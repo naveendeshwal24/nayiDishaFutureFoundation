@@ -1,4 +1,4 @@
-# Security Audit Checklist - Nayi Disha Foundation
+# Security Audit Checklist - Nai Disha Foundation
 
 ## ✅ Completed Items (This Audit)
 
